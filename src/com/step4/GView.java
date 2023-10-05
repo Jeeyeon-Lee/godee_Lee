@@ -1,5 +1,8 @@
 package com.step4;
-//16-20-(12-13-5-6-7)-22-(반복)
+//해당클래스 그려보기
+//GLogic에서 GView j 사용하기
+//GView에서 GLogic i 사용하기
+//사용자정의 클래스, 자바제공 클래스 사이 활용하기 가능한가
 class GLogic{
 	int i = 1;
 	public GLogic(GView gv) {  //null
@@ -7,11 +10,12 @@ class GLogic{
 		System.out.println("GLogic i : "+gv.j);
 	}
 }
-public class GView {
+public class GView {  
 	int j = 1;
 	GView() {	//디폴트 생성자만 생략 가능함!
 		GLogic gl = new GLogic(this);          //this는 현재 스레드가 관리하는 클래스이고 원본 나 자신
 		//원본인지 확인하는 법? 전역변수로 확인 가능??
+		System.out.println(gl.i);
 	}
 	public static void main(String[] args) {
 		//static 안에서는 this나 supper(부모클래스 수정자?) 사용 불가 -> 생성자에서는 가능하다

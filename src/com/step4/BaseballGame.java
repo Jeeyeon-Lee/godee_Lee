@@ -10,6 +10,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -65,11 +66,22 @@ public class BaseballGame implements ActionListener{
 	
 	//사용자정의 메소드
 	
+	//새 게임 버튼이 눌리면 호출되고, 또 최초 실행하자마자 바로 호출될 수도 있는 메소드
+	//중복을 제거하여 채번한 숫자를 1차 배열에 초기화하기
 	public void ranCom() {
-
+		Random r = new Random();
+		com[0] = r.nextInt(10); //0~9 사이 숫자 채번
+		//do..while문 조건검사를 나중에 하므로 무조건 한 번은 실행되고, while문은 먼저 조건검사를 하니 한번도 실행이 안될 수 있음. 
+		do { 
+			com[1] = r.nextInt(10);
+		}while(com[0] == com[1]);
+		do { 
+			com[2] = r.nextInt(10);
+		}while(com[0] == com[1] || com[1] == com[2]);  
 	}
 	//사용자가 입력한 값을 판정하는 메소드를 구현해 봅시다.
 	public String account(String user) {
+		System.out.println("사용자가 입력한 숫자는 "+user);
 		if(user.length()!=3) {
 			return "세자리 숫자를 입력하세요.";
 		}
@@ -85,6 +97,22 @@ public class BaseballGame implements ActionListener{
 		} catch (NumberFormatException e) {
 			return "숫자만 입력하세요.";
 		}
+		my[0] = temp/100;         //2.56 -> int 2만 담김(백의자리)
+		my[1] = (temp%100)/10; //5.6   -> int 5만 담김(십의자리)
+		my[2] = temp%10;         //6     -> int 6만 담김(일의자리)
+		System.out.println(my[0]+""+my[1]+""+my[2]);
+		for(int i=0;i<3;i++) {
+			for(int j=0;j<3;j++) {
+				if(com[i] == my[j]) {          //숫자 같니?
+					if(i == j) {      //위치 같니?
+						strike++;
+					}else {
+						ball++;
+					}
+				}
+			}
+		}
+		
 		return strike+"스  "+ball+"볼";
 	}
 	
