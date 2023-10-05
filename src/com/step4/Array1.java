@@ -8,6 +8,14 @@ public class Array1 {
 			System.out.println("com ["+i+"]"+com[i]);
 		}
 		int my[]     = {1, 2, 3};
-		int other[]  = new int[] {1,2,3}; 
+		//가진 전부를 처리할 땐 개선된  for 문 사용
+		for(int i:my) {
+			System.out.print(i); // 1, 2, 3  출력
+		}
+		System.out.println();
+		int other[]  = new int[] {1,2,3};
+		for(int i:other) {
+			System.out.println(i);
+		}
 	}
 }
