@@ -10,7 +10,7 @@ public class Oper1 {
 		}else {
 			System.out.println("거짓");
 		}
-		System.out.println(i+",+j");
+		System.out.println(i+" ,"+j);
 	}
 }
 /*
