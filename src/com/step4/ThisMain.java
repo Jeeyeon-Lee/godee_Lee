@@ -12,8 +12,8 @@ class ZipcodeApp{
 	//생성자
 	ZipcodeApp(ThisMain tm) {     //static이 없는 생성자이기 때문에 인스턴스화 없이 사용 가능
 		System.out.println(tm.i);
-		for(double d=0;d<99999;d++) {
-			System.out.println("지연되고 있습니다.");
+		for(double d=0;d<999999.0;d++) { //더블이어서 범위가 넓음.
+//			System.out.println("지연되고 있습니다.");  -> 호출을 하기 위해 io가 일을 함. 부담
 		}
 		//메소드 호출 순서를 정할 수 있어야 한다.(대기상태, 지연, 데드락...)
 		intitDisplay();
