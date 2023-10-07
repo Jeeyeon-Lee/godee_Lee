@@ -14,6 +14,13 @@ public class TimeServer extends Thread {
 	public TimeServer(Socket client) { //getTime에서 나온 정보를 소켓을 통해 보냄. 
 		this.client = client; 
 	}
+	public String getTime() {
+		Calendar cal = Calendar.getInstance();
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		int min = cal.get(Calendar.MINUTE);
+		int sec = cal.get(Calendar.SECOND);
+		return hour +":"+min+":"+sec;
+	}
 	//오버라이드 - 콜백메소드
 	@Override
 	public void run() {  //1초에 한번씩 보내야하는 스레드 필요!
@@ -26,7 +33,7 @@ public class TimeServer extends Thread {
 				try {                          //인터셉트 일어날 수 있으니 예외처리 반드시 필요!!
 					sleep(1000);  //1초
 				} catch (Exception e) { //예외가 있으면 잡아줘
-					// TODO: handle exception
+					System.out.println(e.toString());
 				} finally {                  //무슨일이 있어도 이건 해줘
 					try {
 						client.close();
@@ -45,13 +52,6 @@ public class TimeServer extends Thread {
 	Constructs a calendar with the specified time zone and locale.
 	field - static int
 	*/ 
-	public String getTime() {
-		Calendar cal = Calendar.getInstance();
-		int hour = cal.get(Calendar.HOUR_OF_DAY);
-		int min = cal.get(Calendar.MINUTE);
-		int sec = cal.get(Calendar.SECOND);
-		return hour +":"+min+":"+sec;
-	}
 	public static void main(String[] args) {
 		int port = 5000;
 		ServerSocket server = null;  //존재만 함. 일x, ServerSocket은 예외처리를 반드시 하게 되어있는 클래스임. 
