@@ -1,4 +1,4 @@
-package Practice;
+package practice;
 
 public class Sungjuk {
 	private String name = null;              //학생이름

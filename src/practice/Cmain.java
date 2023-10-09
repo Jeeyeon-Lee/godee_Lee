@@ -1,4 +1,4 @@
-package Practice;
+package practice;
 class C{
 	int tot;
 	int avg;
