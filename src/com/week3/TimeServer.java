@@ -35,7 +35,6 @@ public class TimeServer extends Thread {
 				}
 			}////////////////////////////////////while end//////////////////////////////////////////////
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 	}
 	/*
