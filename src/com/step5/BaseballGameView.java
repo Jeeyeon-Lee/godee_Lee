@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -65,9 +66,24 @@ public class BaseballGameView implements ActionListener{
 	int my[]  = new int[3];
 	int com[] = new int[3];
 	int cnt = 0;//++cnt 힌트 문장에서 순번을 출력하는 변수
+
+	//생성자 선언
+	public BaseballGameView() {
+		ranCom();
+	}
+	
 	//세자리 임의의 숫자를 채번하는 메소드 구현하기
 	public void ranCom() {
-
+		Random r = new Random();
+		//첫번째 자리는 중복검사가 필요없다.
+		com[0] = r.nextInt(10);
+		//두번째 자리부터 중복검사 진행
+		do{
+			com[1] = r.nextInt(10);
+		}while(com[0] == com[1]); //중복된 숫자이면 계속 do 해라
+		do{
+			com[2] = r.nextInt(10);
+		}while(com[0] == com[2] || com[1] == com[2]); //중복된 숫자이면 계속 do 해라
 	}
 	//사용자가 입력한 값을 판정하는 메소드를 구현해 봅시다.
 	public String account(String user) {
@@ -86,13 +102,32 @@ public class BaseballGameView implements ActionListener{
 		} catch (NumberFormatException e) {
 			return "숫자만 입력하세요.";
 		}
+		//사용자입력수
+		my[0] = temp/100;           //256/100=> 2.56 -> 2만 담김
+		my[1] = (temp%100)/10;   //십의자리 - 몫 2 나머지 56-> 5.6 -> 5만 담김
+		my[2] = temp%10;           //몫: 25 - 6만담김
+		//이 중 for 문 사용해서 자리는 다르더라도 그 숫자가 존재하니? 네-> ball확보됨
+		//네 일때 다시 한번 i ==j가 같은지  비교해서 index값 마저도 동일하면 자리까지도 일치함 - strike++
+		for(int i=0;i<3;i++) {        //9가지 경우의 수가 발생
+			for(int j=0;j<3;j++) {
+				if(com[i] == my[j]) { //그 숫자가 존재하니? 네 -ball확보
+					if(i==j) {             //자리값도 일치하는 거야? 네 -strike결정됨
+						strike++;
+					}else {//숫자는 있지만 자리는 달라요
+						ball++;
+					}
+				}//end of if
+			}/// end of inner for
+			if(strike == 3) { //for 문이 끝난 상태에서 해봐야함. 
+				return "정답입니다, 축하합니다.";
+			}
+		}//////end of outter for
 		return strike+"스  "+ball+"볼";
 	}
-	
 	//나가기 버튼이나 나가기 메뉴 아이템을 선택(클릭)했을때 호출되는 메소드 구현
 	public void exit() {
-
-	}
+		System.exit(0);
+		}
 	//화면을 그려주는 메소드 선언
 	public void initDisplay() {
 		jta_display = new JTextArea();
@@ -165,24 +200,42 @@ public class BaseballGameView implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("actionPerformed 호출 성공");
-		String label = e.getActionCommand();
+		String label = e.getActionCommand();//감지된 클래스의 라벨담기
 		System.out.println("너가 누른 버튼의 문자열은 "+label+ " 입니다.");
 		Object obj = e.getSource();//이벤트소스의 주소번지를담아줌.
-		//너 나가기 버튼이니?
-		if("나가기".equals(label)) {
-
+		System.out.println(obj);
+		if("지우기".equals(label)) {
+			jta_display.setText("");
 		}
+		//너 나가기 버튼이니?
+		//|만 있을 땐 앞에 조건이 true이면 실행문이 결정되었지만 뒤에 조건을 따짐
+		//||가 있을 땐 앞에 조건이 true이면 뒤에 조건이 false이어도 어차피 실행됨 - 뒤에 조건을 안따짐- 일량이 줄어듦
+		else if("나가기".equals(label) || obj == jmi_exit) {//or이니까 둘중 하나만 true이어도 호출된다.
+			exit();//사용자 정의 메소드 호출이다.
+		}
+		
 		//새게임을 누른거야?
-		else if(obj == jbtn_new) {
-			jtf_user.requestFocus();
+		else if(obj == jbtn_new || obj == jmi_new) { //버튼, 메뉴바 or 로 처리
+			cnt = 0;
+			ranCom();
+			jta_display.setText(""); //append뒤에 붙이기, setText 덮어쓰기
+			jta_display.append("정답은 "+com[0]+com[1]+com[2]+" 입니다.\n"); //정답확인용
 		}
 		//이벤트가 발생한 이벤트 소스의 문자열을 비교하기
 		else if(e.getSource()==jtf_user) {
-
+			jta_display.append(++cnt+"회 " +jtf_user.getText()+" : " + account(jtf_user.getText())+"\n");  //사용자가 입력한 값 : 0스0볼 출력
+			jtf_user.setText("");
 		}///////////입력하고 엔터 쳤을 때
-		else if(obj==jbtn_dap) {
-
+		else if(obj==jmi_dap || "정답".equals(label)) {
+			//1-먼저 채번(동사-기능-메소드 호출)하고 그 다음에 com배열에 있는 값을 출력해 준다.
+			jta_display.append("정답은 "+com[0]+com[1]+com[2]+" 입니다.\n");
 		}
 	}///////////////end of actionPerformed
-
 }
+
+
+
+
+
+
+
