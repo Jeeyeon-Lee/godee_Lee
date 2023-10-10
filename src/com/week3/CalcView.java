@@ -17,19 +17,23 @@ public class CalcView implements ActionListener{
 	JButton jbtnPlus = new JButton("+");
 	JButton jbtnEqual = new JButton("=");
 	JButton jbtnBack = new JButton("<=");
+	JButton jbtnClear = new JButton("C");
 	
 	//이벤트 처리를 담당하는 핸들러 클래스의 인스턴스 변수를 준다.
 	public void initDisplay() {
+		jtf_display.setHorizontalAlignment(JTextField.RIGHT);
 		jbtnOne.addActionListener(this);
 		jbtnTwo.addActionListener(this);
 		jbtnPlus.addActionListener(this);
 		jbtnEqual.addActionListener(this);
 		jbtnBack.addActionListener(this);
+		jbtnClear.addActionListener(this);
 		jp.add(jbtnOne);
 		jp.add(jbtnTwo);
 		jp.add(jbtnPlus);
 		jp.add(jbtnEqual);
 		jp.add(jbtnBack);
+		jp.add(jbtnClear);
 		jf.add("North",jtf_display);
 		jf.add("Center",jp);
 		jf.setSize(400, 400);

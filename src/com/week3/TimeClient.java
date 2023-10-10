@@ -7,51 +7,59 @@ import java.net.Socket;
 import javax.swing.JLabel;
 
 public class TimeClient extends Thread {
-	//선언부
-	JLabel jlbTime = null;    //초기화
-	public TimeClient(JLabel jlbTime) {        /*이 부분이 학습 필요한 부분 */
+	JLabel jlbTime = null;
+	TimeView tView = null;
+	public TimeClient() {}
+	public TimeClient(JLabel jlbTime) {
 		this.jlbTime = jlbTime;
-//		TimeServer ts = new TimeServer();   소켓으로 연결되었으니 필요x
-//		jlbTime.setText(ts.getTime());
 	}
-	//생성자
-	public TimeClient() {} 
-	//사용자정의메소드
-	//메소드 오버라이드 - 콜백메소드 - ex)actionPerformed - 개발자가 직접 호출하지 못 하는 단점 - 
+	public TimeClient(TimeView tView) {
+		this.tView = tView;
+	}
+	//콜백메소드 - actionPerformed - 개발자가 직접 호출하지 못한다.
 	@Override
-	public void run() { 
+	public void run() {
 		System.out.println("run호출");
 		Socket socket = null;
-		//다른 스트림 중 아래 선택이유? 내부적 직렬화, 다른 stream클래스보다 보안 높아서 사용
 		ObjectOutputStream oos = null;
 		ObjectInputStream ois = null;
-		String timeStr = null;
 		try {
-			socket = new Socket("172.16.2.11",5000);
+		String timeStr = null;
+			socket = new Socket("localhost",5000);//ServerSocket 클라이언트의 소켓정보 쥔다
 			oos = new ObjectOutputStream(socket.getOutputStream());
 			ois = new ObjectInputStream(socket.getInputStream());
 			while(true) {
+				//TimeServer에서 1초마다 getTime() 호출로 알아낸 시간 정보를 oos.writeObject(getTime())하면
+				//아래에서 들을 수 있다.
 				timeStr = ois.readObject().toString();
 				System.out.println(timeStr);
+				//아래코드는 TimeView에서 생성한 JLabel콤포넌트에 직접 출력하는문장
+				//NullPointerException이 발생하지 않도록 맞는 생성자를 호출하기
+				System.out.println("TimeClient : "+jlbTime);
+				tView.jlbTime.setText(timeStr);//이 부분이 학습목표임
+				tView.jf.setTitle(timeStr);
 				try {
-					sleep(1000);
-				} catch (Exception e) { //Exeption은 스레드 지원 클래스 
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					System.out.println(e.toString());
 				}
-			}/////////////////////////end of while/////////////////////////////
+			}////////end of while ////////////
 		} catch (Exception e) {
-		} finally { //명시적으로 종료시키지 않으면 시점이 계속 늘어져서 종료를 시켜줘야 함. (생성의 역순으로) 
-			try{
+			System.out.println(e.toString());
+		} finally {
+			try {
 				ois.close();
 				oos.close();
 				socket.close();
-			}catch (Exception e) {
+			} catch (Exception e2) {
+				// TODO: handle exception
 			}
 		}
-		}
-	///////////////////////////////end of run/////////////////////////////
-	//메인메소드
+	}///////////////end of run /////////////////
+
 	public static void main(String[] args) {
 		TimeClient tc = new TimeClient();
-		tc.start(); //run메소드를 호출하는 메소드!(JVM이 인터셉트)
+		tc.start();
 	}
+
 }
