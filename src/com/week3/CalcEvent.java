@@ -34,6 +34,9 @@ public class CalcEvent implements ActionListener{
 		}		
 		else if("<=".equals(command)) {//너 = 버튼 누른거야?
 			System.out.println("한글자씩 지우기 구현");		
-		}		
+		}
+		else if("C".equals(command)) { //너 C 버튼 누른거야?
+			jtf_display.setText("");
+		}
 	}
 }

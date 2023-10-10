@@ -10,9 +10,9 @@ public class TimeClient extends Thread {
 	JLabel jlbTime = null;
 	TimeView tView = null;
 	public TimeClient() {}
-	public TimeClient(JLabel jlbTime) {
-		this.jlbTime = jlbTime;
-	}
+//	public TimeClient(JLabel jlbTime) {
+//		this.jlbTime = jlbTime;
+//	}
 	public TimeClient(TimeView tView) {
 		this.tView = tView;
 	}

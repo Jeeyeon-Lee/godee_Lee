@@ -20,9 +20,6 @@ public class TimeView {
 	 */
 	TimeClient tc = new TimeClient(this); //this로 넘겨야 JLabel과 JFrame둘 다 접근할 수 있음. 
 	//생성자
-	TimeView(){
-		
-	}
 	public void initDisplay() {
 		System.out.println("TimeView : "+jlbTime);
 		tc.start();

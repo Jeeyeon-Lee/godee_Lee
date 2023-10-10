@@ -1,32 +1,36 @@
-package com.step4;
+package com.step5;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
-import java.util.Random;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-
-//View로 가는 전변
-//Logic으로 가는 전변
-//Event로 가는 전변
-public class BaseballGame implements ActionListener{
-	//선언부 - 전역변수의 성격을 갖는다 - 인스턴스변수.변수명으로 어떤 클래스에서든 사용이 가능하다.
+import javax.swing.JToolBar;
+/*
+ * 이벤트 처리 3단계
+ * 1.JTextField가 지원하는 이벤트 처리 담당 클래스를 implements한다.
+ * 2.1번에서 추가된 이벤트 처리 담당 클래스가 선언하고 있는 actionPerformed메소드를 재정의 해야함.
+ * 3.이벤트 소스(이벤트 처리 대상 클래스의 주소번지)와 이벤트 처리를 담당하는 클래스를 연결하기
+ */
+public class BaseballGameView implements ActionListener{
 	JFrame jf = new JFrame();
 	//이미지를 담은 물리적인 위치 선언하기.
 	String 		imgPath = "D:\\workspace_java\\dev_java\\src\\com\\week2\\";
@@ -59,29 +63,14 @@ public class BaseballGame implements ActionListener{
 	JButton jbtn_clear 	= new JButton("지우기");
 	JButton jbtn_exit 	= new JButton("나가기");
 	int my[]  = new int[3];
-	int com[] = new int[3]; //세자리 임의의 숫자를 담을 1차배열을 담는 변수 선언 -> 어디로 가는지 아는 시야-> 소스리뷰 가능 
-	int cnt = 0;                //++cnt 힌트 문장에서 순번을 출력하는 변수 -> 야구 회차를 나타내는 전변(게임 유지되는 동안에는 변해야 한다.)
-	//새게임이 시작(새게임을 알리는 메소드 호출, 새게임일 때 초기화해야하는 변수가 반드시 존재) 되면 0으로 초기화 해야한다. 
-	//생성자
-	
-	//사용자정의 메소드
-	
-	//새 게임 버튼이 눌리면 호출되고, 또 최초 실행하자마자 바로 호출될 수도 있는 메소드
-	//중복을 제거하여 채번한 숫자를 1차 배열에 초기화하기
+	int com[] = new int[3];
+	int cnt = 0;//++cnt 힌트 문장에서 순번을 출력하는 변수
+	//세자리 임의의 숫자를 채번하는 메소드 구현하기
 	public void ranCom() {
-		Random r = new Random();
-		com[0] = r.nextInt(10); //0~9 사이 숫자 채번
-		//do..while문 조건검사를 나중에 하므로 무조건 한 번은 실행되고, while문은 먼저 조건검사를 하니 한번도 실행이 안될 수 있음. 
-		do { 
-			com[1] = r.nextInt(10);
-		}while(com[0] == com[1]);
-		do { 
-			com[2] = r.nextInt(10);
-		}while(com[0] == com[1] || com[1] == com[2]);  
+
 	}
 	//사용자가 입력한 값을 판정하는 메소드를 구현해 봅시다.
 	public String account(String user) {
-		System.out.println("사용자가 입력한 숫자는 "+user);
 		if(user.length()!=3) {
 			return "세자리 숫자를 입력하세요.";
 		}
@@ -97,45 +86,22 @@ public class BaseballGame implements ActionListener{
 		} catch (NumberFormatException e) {
 			return "숫자만 입력하세요.";
 		}
-		my[0] = temp/100;         //2.56 -> int 2만 담김(백의자리)
-		my[1] = (temp%100)/10; //5.6   -> int 5만 담김(십의자리)
-		my[2] = temp%10;         //6     -> int 6만 담김(일의자리)
-		System.out.println(my[0]+""+my[1]+""+my[2]);
-		for(int i=0;i<3;i++) {
-			for(int j=0;j<3;j++) {
-				if(com[i] == my[j]) {          //숫자 같니?
-					if(i == j) {      //위치 같니?
-						strike++;
-					}else {
-						ball++;
-					}
-				}
-			}
-		}
-		
 		return strike+"스  "+ball+"볼";
 	}
 	
 	//나가기 버튼이나 나가기 메뉴 아이템을 선택(클릭)했을때 호출되는 메소드 구현
 	public void exit() {
-		//이벤트가 감지되었을 때 호출이 되는 메소드
-		System.exit(0);
+
 	}
-	//화면을 그려주는 메소드
+	//화면을 그려주는 메소드 선언
 	public void initDisplay() {
-		//화면이 열릴 때 커서가 jtf_user에 가 있기 
-		jf.addWindowListener((WindowListener) new WindowAdapter() {
-			public void windowOpened(WindowEvent we) {
-				jtf_user.requestFocus();
-			}
-		});
 		jta_display = new JTextArea();
 		jsp_display = new JScrollPane(jta_display);
 		jta_display.setOpaque(false);
 		jf.setResizable(false);
 		//jf.setContentPane(new BgPanel());
 		//////////////// 툴바에 들어갈 이미지 버튼 추가하기 ///////////////
-		//////////////// 메뉴 바 추가 시작 ////////////////////////////////////
+		//////////////// 메뉴 바 추가 시작 /////////////////
 		jm_game.add(jmi_new);
 		jm_game.add(jmi_dap);
 		jm_game.add(jmi_clear);
@@ -144,7 +110,7 @@ public class BaseballGame implements ActionListener{
 		jm_info.add(jmi_create);
 		jmb.add(jm_game);
 		jmb.add(jm_info);
-		//////////////// 메뉴 바 추가  끝   ////////////////////////////////////
+		//////////////// 메뉴 바 추가  끝   /////////////////
 		System.out.println("initDisplay 호출 성공");
 		//이벤트 소스와 이벤트 처리 클래스를 매핑하는 코드 추가
 		//EventHandler ehandler = new EventHandler();
@@ -171,6 +137,7 @@ public class BaseballGame implements ActionListener{
 		jta_display.setFont(f);
 		jta_display.setBackground(new Color(255,255,200));
 		jta_display.setForeground(new Color(57,109,165));
+
 		jf.setJMenuBar(jmb);
 		jtf_user.setBackground(new Color(255,255,200));
 		jp_center.setBackground(Color.green);
@@ -186,16 +153,17 @@ public class BaseballGame implements ActionListener{
 		jf.setSize(400, 300);
 		jf.setVisible(true);
 	}
-	//@annotation 이라고 읽음
-	//부모가 정의한 메소드를 재정의하는 것-실제 그 장치에 필요한 기능을 구현하시오
-	//부모가(추상클래스-추상은 결정되지 않았음) 정의할 수 없으니(서로 다른 장치라서) ,
-	//나를 구현하는 클래스마다 그 기능에 차이가 있으니, 그 클래스에서 오버라이딩 하시오.
-	//단, 부모의 메소드를 훼손해서는 안 됨!
-	//actionPerformed도 개발자가 직접호출하는 메소드x
-	//그럼 언제, 누가, 왜 호출하는 걸까요? 콜백함수(js), 콜백메소드(java)
-	//버튼을 눌렀을 때(JTextField에서 엔터를 쳤을 때), JVM이 (하드웨어-키보드-입력장치를)감지해내고, 그 때 인터셉트해서 필요한 처리를 개발자가 해낸다. 
-	@Override 
-	public void actionPerformed(ActionEvent e) { //파라미터 자리에 이벤트 객체는 JVM이 이벤트가 감지되었을 때 대신 주입해줌.
+	public static void main(String[] args) {
+		BaseballGameView bbGame = new BaseballGameView();
+		bbGame.initDisplay();
+	}
+	////////jtf_user에 엔터를 쳤을 때 , jbtn_exit버튼을 클릭했을때 이벤트 지원하는 인터페이스가 ActionListener이다.
+	//ActionListener는 반드시 actionPerformed를 재정의 해야 한다.
+	//annotation- 부모가 가진 메소드를 재정의 하였다 는  의미임.
+	//콜백메소드는 개발자가 호출할 수 없는 메소드로 시스템 레벨에서 필요할 때 자동으로 호출됨.
+	//자바에 main메소드도 일종의 콜백 메소드 임.
+	@Override
+	public void actionPerformed(ActionEvent e) {
 		System.out.println("actionPerformed 호출 성공");
 		String label = e.getActionCommand();
 		System.out.println("너가 누른 버튼의 문자열은 "+label+ " 입니다.");
@@ -210,23 +178,11 @@ public class BaseballGame implements ActionListener{
 		}
 		//이벤트가 발생한 이벤트 소스의 문자열을 비교하기
 		else if(e.getSource()==jtf_user) {
-			//엔터이벤트 적용 시 후처리로 JTextfield에서 문자열을 빈문자열로 교체함.
-			//JTextArea가 null이었지만, initDisplay 에서 인스턴스화를 마쳤(생성)으므로, 
-			//NullPointerExceptrion이 발생 x - UI통해 테스트 할 때 관전포인트
-			//숫자 입력 후 JVM이 ActionPerformed에서 호출을 하니 내부에서 출력해봄.
-			System.out.println(jtf_user.getText()); //찍히는지 확인해보기 
-			//재사용성을 위해 메소드 호출을 할 수 있도록 연습, 메소드로 이관했을 때 동일한 효과 나와야 함. 
-//			cnt = cnt + 1;                               //이벤트가 감지될 때 마다 자동으로 호출되고, 후처리를 맡김
-			jta_display.append(++cnt + "회 : "+ jtf_user.getText()+"\n");
-			jtf_user.setText("");
-		}///////////입력하고 엔터 쳤을 때 
+
+		}///////////입력하고 엔터 쳤을 때
 		else if(obj==jbtn_dap) {
-		}	
-	}
-	//메인메소드 - 최소한의 코드만 작성하도록 연습할 것!
-	public static void main(String[] args) {
-		BaseballGame bbGame = new BaseballGame();
-		bbGame.initDisplay();
-	}
+
+		}
+	}///////////////end of actionPerformed
 
 }
