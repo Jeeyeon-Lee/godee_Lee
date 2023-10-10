@@ -16,7 +16,10 @@ public class MyCalcTemplate implements ActionListener{
 	JTextField jtf = new JTextField("0");   //북쪽에 들어갈 텍스트필드
 	JPanel jp_center = new JPanel();             //디폴트 : FlowLayout  ->GridLayout(4,4) 설정
 	JButton jbtns[] = new JButton[16];
-	String labels[] = {"7","8","9","+","4","5","6","-","1","2","3","*","C","0","=","/"};
+	String labels[] = {"7","8","9","+",
+					   "4","5","6","-",
+					   "1","2","3","*",
+					   "C","0","=","/"};
 	//생성자
 	MyCalcTemplate(){
 		initDisplay();
