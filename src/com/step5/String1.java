@@ -8,5 +8,4 @@ public class String1 {
 		String s1 = "hello";
 		String s2 = "hello";
 	}
-
 }
