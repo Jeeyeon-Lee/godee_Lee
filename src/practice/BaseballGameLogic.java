@@ -3,26 +3,16 @@ package practice;
 import java.util.Random;
 
 public class BaseballGameLogic {
-	//선언부
-	
+	/*선언부*/
+	int my[]  = new int[3];
+	int com[] = new int[3];
 	BaseballGameUI bbgUI = null;
-	//생성자
+	/*생성자*/
 	public BaseballGameLogic(BaseballGameUI baseballGameUI) {
 		this.bbgUI = baseballGameUI;
 	}
-	//세자리 임의의 숫자를 채번하는 메소드 구현하기
-	public void ranCom() {
-		Random r = new Random();
-		//첫번째 자리는 중복검사가 필요없다
-		com[0] = r.nextInt(10);
-		//while문과는 다르게 무조건 한번은 실행됨
-		do {
-			com[1] = r.nextInt(10);			
-		}while(com[0]==com[1]);//중복된 숫자이면 계속 돌아라
-		do {
-			com[2] = r.nextInt(10);			
-		}while((com[0]==com[2]) || (com[2]==com[1]));//중복된 숫자이면 계속 돌아라
-	}
+	/*정의메소드*/
+
 	//사용자가 입력한 값을 판정하는 메소드를 구현해 봅시다.
 	public String account(String user) {
 		if(user.length()!=3) {//length명사형은 배열의 원소의 수반환. length()동사형은 문자열의 길이를 반환함
@@ -59,4 +49,17 @@ public class BaseballGameLogic {
 		return strike+"스  "+ball+"볼";
 	}
 	
+	//세자리 임의의 숫자를 채번하는 메소드 구현하기
+	public void ranCom() {
+		Random r = new Random();
+		//첫번째 자리는 중복검사가 필요없다
+		com[0] = r.nextInt(10);
+		//while문과는 다르게 무조건 한번은 실행됨
+		do {
+			com[1] = r.nextInt(10);			
+		}while(com[0]==com[1]);//중복된 숫자이면 계속 돌아라
+		do {
+			com[2] = r.nextInt(10);			
+		}while((com[0]==com[2]) || (com[2]==com[1]));//중복된 숫자이면 계속 돌아라
+	}
 }

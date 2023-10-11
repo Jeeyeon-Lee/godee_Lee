@@ -3,6 +3,12 @@ package com.week3;
 //MVC의 모델계층은 재사용성, 이식성을 위해 순수하게 남겨둔다.
 //어떤 추상클래스나 인터페이스도 구현하지 않는 순수하게 사용자정의 메소드나 변수로만 구현한다.
 public class MyCalcLogic {
+	//선언부
+	MyCalcView myCalcView = null;      //초기화
+	public MyCalcLogic(MyCalcView myCalcView) {
+		this.myCalcView = myCalcView;  //재정의
+	}
+
 	/*////////////////////////////////////////////////////////////////////////////////////////////////////
 	 * 사칙연산을 구현하기
 	 * v1 - 연산자가 눌리기 전까지 입력된 숫자 묶음
