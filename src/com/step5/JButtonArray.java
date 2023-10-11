@@ -19,7 +19,6 @@ public class JButtonArray implements ActionListener{
 			jbtns[i].addActionListener(this);          //이 클래스를 참조
 		}
 	}
-	
 	//사용자메소드
 	public void initDisplay() {
 		jf.setTitle("객체배열 연습");
@@ -31,17 +30,13 @@ public class JButtonArray implements ActionListener{
 			jf.add(jbtns[i]);
 		}
 	}
-	
 	//메인메소드
 	public static void main(String[] args) {
 		JButtonArray ja = new JButtonArray();
 		ja.initDisplay();
 	}
-
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		
 	}
-
 }
