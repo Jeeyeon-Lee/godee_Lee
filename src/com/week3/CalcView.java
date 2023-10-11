@@ -44,6 +44,33 @@ public class CalcView implements ActionListener{
 		jf.setSize(400, 400);
 		jf.setVisible(true);
 	}
+	/*////////////////////////////////////////////////////////////////////////////////////////////////////
+	 * 사칙연산을 구현하기
+	 * v1 - 연산자가 눌리기 전까지 입력된 숫자 묶음
+	 * v2 - =이 눌렸을 때 그 전까지 입력된 숫자 묶음
+	 * op - 연산자(+,-,*,/)
+	 * return = JTextField에 계산된 결과를 출력해야 한다. String이다. jft_display.setText("3");
+	 ///////////////////////////////////////////////////////////////////////////////////////////////////*/
+	public String calcurate(String v1, String v2, String op) { //숫자 2개, 연산식 1개
+		double d1 = Double.parseDouble(v1);
+		double d2 = Double.parseDouble(v2);
+		if("+".equals(op)) {
+			return String.valueOf(d1 + d2);    //방법 1 - double이기 때문에 String으로 변경 필요
+//			return ""+(d1 + d2);                   //방법 2 - double이기 때문에 String으로 변경 필요
+ 		}
+		else if("-".equals(op)) {
+			return String.valueOf(d1 - d2);   
+		}
+		else if("*".equals(op)) {
+			return String.valueOf(d1 * d2);  
+		}
+		else if("/".equals(op)) {
+			return String.valueOf(d1 / d2);    
+		}
+		else {
+			return "error";
+		}
+	}
 	public static void main(String[] args) {
 		CalcView cv = new CalcView();
 		cv.initDisplay();
@@ -77,13 +104,8 @@ public class CalcView implements ActionListener{
 			System.out.println("계산 결과는 얼마");		
 			//v2담기
 			v2 = jtf_display.getText();
-			System.out.println("v1 : "+v1+", v2 : "+v2+", op : "+op);
-			double d1 = Double.parseDouble(v1);
-			double d2 = Double.parseDouble(v2);
-			String result1 = ""+d1+d2;
-			jtf_display.setText(result1);
-			String result2 = String.valueOf(d1+d2);
-			jtf_display.setText(result2);
+			String result = calcurate(v1, v2, op);
+			jtf_display.setText(result);
 		}		
 		else if("<=".equals(command)) {//너 = 버튼 누른거야?
 			System.out.println("한글자씩 지우기 구현");		

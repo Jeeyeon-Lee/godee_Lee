@@ -1,36 +1,28 @@
-package com.step5;
+package practice;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Random;
 
 public class BaseballGameEvent implements ActionListener{
-	int cnt = 0;
-	//생성만
-	//아래 생성자 호출은 BaseballGameEvent에서 일어나는게 아니고
-	//BaseballGameUI에서 생성자 호출이 일어난다. 
-	/*그 때 파라미터 자리에 this를 넣어주어서(인스턴스화해서 생긴 BaseballGameUI 그 원본) */
+	//선언부
+	int cnt = 0;//++cnt 힌트 문장에서 순번을 출력하는 변수
 	BaseballGameUI bbgUI = null;
-	 public BaseballGameEvent(BaseballGameUI baseBallGameUI) {
-		 //생성된 인스턴스변수는 UI에서 가져온 원본임.
-		 this.bbgUI = baseBallGameUI; //null상태에서 원본값을 갖도록 생성하였음.
+	//생성자
+	public BaseballGameEvent(BaseballGameUI baseballGameUI) {
+		this.bbgUI = baseballGameUI;
 	}
-	//나가기 버튼이나 나가기 메뉴 아이템을 선택(클릭)했을때 호출되는 메소드 구현
+
+	//사용자 메소드
 	public void exit() {
 		System.exit(0);
-		}
-	public void ranCom() {
-		Random r = new Random();
-		//첫번째 자리는 중복검사가 필요없다
-		bbgUI.bbgLogic.com[0] = r.nextInt(10);
-		//while문과는 다르게 무조건 한번은 실행됨
-		do {
-			bbgUI.bbgLogic.com[1] = r.nextInt(10);			
-		}while(bbgUI.bbgLogic.com[0]==bbgUI.bbgLogic.com[1]);//중복된 숫자이면 계속 돌아라
-		do {
-			bbgUI.bbgLogic.com[2] = r.nextInt(10);			
-		}while((bbgUI.bbgLogic.com[0]==bbgUI.bbgLogic.com[2]) || (bbgUI.bbgLogic.com[2]==bbgUI.bbgLogic.com[1]));//중복된 숫자이면 계속 돌아라
 	}
+	
+	////////jtf_user에 엔터를 쳤을 때 , jbtn_exit버튼을 클릭했을때 이벤트 지원하는 인터페이스가 ActionListener이다.
+	//ActionListener는 반드시 actionPerformed를 재정의 해야 한다.
+	//annotation- 부모가 가진 메소드를 재정의 하였다 는  의미임.
+	//콜백메소드는 개발자가 호출할 수 없는 메소드로 시스템 레벨에서 필요할 때 자동으로 호출됨.
+	//자바에 main메소드도 일종의 콜백 메소드 임.
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("actionPerformed 호출 성공");
 		String label = e.getActionCommand();//감지된 클래스의 라벨담기
@@ -43,12 +35,11 @@ public class BaseballGameEvent implements ActionListener{
 		//너 나가기 버튼이니?
 		//|만 있을 땐 앞에 조건이 true이면 실행문이 결정되었지만 뒤에 조건을 따짐
 		//||가 있을 땐 앞에 조건이 true이면 뒤에 조건이 false이어도 어차피 실행됨 - 뒤에 조건을 안따짐- 일량이 줄어듦
-		else if("나가기".equals(label) || obj == bbgUI.jmi_exit) {//or이니까 둘중 하나만 true이어도 호출된다.
+		else if("나가기".equals(label) || obj == jmi_exit) {//or이니까 둘중 하나만 true이어도 호출된다.
 			exit();//사용자 정의 메소드 호출이다.
 		}
 		//새게임을 누른거야?
 		else if(obj == bbgUI.jbtn_new) {
-			bbgUI.bbgLogic.ranCom();
 			bbgUI.jtf_user.requestFocus();
 		}
 		//이벤트가 발생한 이벤트 소스의 문자열을 비교하기
@@ -63,4 +54,5 @@ public class BaseballGameEvent implements ActionListener{
 			//jta_display.append(com[0]+com[1]+com[2]);//0
 		}
 	}///////////////end of actionPerformed
+
 }

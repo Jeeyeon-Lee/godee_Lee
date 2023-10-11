@@ -1,6 +1,6 @@
-package com.step5;
+package com.week3;
 
-public class BaseballView {
+public class MyCalcView {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
