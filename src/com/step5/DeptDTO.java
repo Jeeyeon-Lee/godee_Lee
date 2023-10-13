@@ -5,8 +5,14 @@ public class DeptDTO {
 	private int deptno;
 	private String dname;
 	private String loc;
-	private EmpDTO empDTO;  //이렇게 입력해서 EmpDTO와 연결
 	/*생성자*/
+	public DeptDTO() {}
+	public DeptDTO(int deptno, String dname, String loc) {
+		this.deptno = deptno;
+		this.dname = dname;
+		this.loc = loc;
+	}
+	private EmpDTO empDTO;  //이렇게 입력해서 EmpDTO와 연결
 	/*정의메소드*/
 	public EmpDTO getEmpDTO() {
 		return empDTO;

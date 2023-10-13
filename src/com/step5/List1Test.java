@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
-public class ListTest {
+public class List1Test {
 
 	public static void main(String[] args) {
 		List<String> names = new ArrayList<>();

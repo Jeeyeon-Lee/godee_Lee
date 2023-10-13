@@ -1,18 +1,72 @@
 package com.step5;
 
-public class EmpDTO {  //Emp데이터서버 관련 접미어
-	/*선언부*/
-	private int empno;
-	private String ename;
-	private String job;
-	private int deptno; 
-	//위 변수의 경우, DeptDTO와 연결되어야 하는데 여기서 새로 선언하면 '반정규화, 역정규화'라고 함. but, 가져와서 사용!
-	//private DeptDTO deptDTO; //How? 타입에 클래스를 넣어서 연결하여 사용! 그런데 여기서 부모는 DeptDTO이기 때문에 거기서 작업!! 
-	/*생성자*/
-	/*정의메소드*/
-	/*메인메소드*/
-	public static void main(String[] args) {
-
+public class EmpDTO {
+	private int empno    =0;// 
+	private String ename    =null;// 
+	private String job      = null;//
+	private int mgr      =0;//
+	private String hiredate = null;// 
+	private int sal      =0;//
+	private int comm     =0;// 
+	private int deptno   =0;// 
+	public EmpDTO() {}
+	public EmpDTO(int empno, String ename, String job, int mgr
+			                 ,  String hiredate, int sal, int comm, int deptno) {
+		this.empno = empno;
+		this.ename = ename;
+		this.job = job;
+		this.mgr = mgr;
+		this.hiredate = hiredate;
+		this.sal = sal;
+		this.comm = comm;
+		this.deptno = deptno;
 	}
-
+	public int getEmpno() {
+		return empno;
+	}
+	public void setEmpno(int empno) {
+		this.empno = empno;
+	}
+	public String getEname() {
+		return ename;
+	}
+	public void setEname(String ename) {
+		this.ename = ename;
+	}
+	public String getJob() {
+		return job;
+	}
+	public void setJob(String job) {
+		this.job = job;
+	}
+	public int getMgr() {
+		return mgr;
+	}
+	public void setMgr(int mgr) {
+		this.mgr = mgr;
+	}
+	public String getHiredate() {
+		return hiredate;
+	}
+	public void setHiredate(String hiredate) {
+		this.hiredate = hiredate;
+	}
+	public int getSal() {
+		return sal;
+	}
+	public void setSal(int sal) {
+		this.sal = sal;
+	}
+	public int getComm() {
+		return comm;
+	}
+	public void setComm(int comm) {
+		this.comm = comm;
+	}
+	public int getDeptno() {
+		return deptno;
+	}
+	public void setDeptno(int deptno) {
+		this.deptno = deptno;
+	}
 }

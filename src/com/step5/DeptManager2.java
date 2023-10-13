@@ -4,7 +4,9 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -19,9 +21,9 @@ import javax.swing.table.DefaultTableModel;
 //자바는 단일 상속만 extends 가능하다. 다중 상속은 불가하다. 다중상속의 단점을 보완하기 위해 인터페이스가 제공됨.
 //단, 인터페이스는 다중으로 implements 가능함. 클래스 간 결합도가 낮은 코드를 작성하도록 가이드가 됨, 예 : Thread  
 //추상클래스와 인터페이스는 설계적 관점에서 중요 -> 2~3년차 작업
-public class DeptManager extends JFrame implements ActionListener {
+public class DeptManager2 extends JFrame implements ActionListener {
 	/*선언부*/
-	List<DeptDTO> deptList = new ArrayList<>(); //왜 데이터를 전변으로 넣는가? 입력|수정|삭제|조회를 생각하면 유지되어야 하기에!
+	List<Map<String, Object>> deptList = new ArrayList<>(); //왜 데이터를 전변으로 넣는가? 입력|수정|삭제|조회를 생각하면 유지되어야 하기에!
 	String header[] = {"부서번호","부서명","지역"};
 	String datas[][] = new String[3][3]; //데이터는 아직x, 후처리
 	DefaultTableModel  dtm_dept = new DefaultTableModel(datas,header); //폼, 양식만 만들어 DataSet 구상하기! 
@@ -37,7 +39,7 @@ public class DeptManager extends JFrame implements ActionListener {
 	JButton jbtnDel        = new JButton("행삭제");
 	JButton jbtnExit        = new JButton("종료");
 	/*생성자*/
-	public DeptManager() { //디폴트 생성자
+	public DeptManager2() { //디폴트 생성자
 		initDisplay();
 		getDeptList(); //메소드 호출!! -> 전변의 값으로 배열을 받고 있었으니 초기화되어 출력됨. 
 	}
@@ -63,19 +65,28 @@ public class DeptManager extends JFrame implements ActionListener {
 	}
 	/*정의메소드*/
 	//리스트로 더하는 메소드
-	public List<DeptDTO> getDeptList(){
-		DeptDTO dept = new DeptDTO(10, "영업부", "부산");
-		deptList.add(dept);
-		dept = new DeptDTO(20,"개발부","대전");
-		deptList.add(dept);
-		dept = new DeptDTO(30, "운영부","인천");
-		deptList.add(dept);
+	public List<Map<String, Object>> getDeptList(){
+		Map<String, Object> map = new HashMap<>();//복사본
+		map.put("DEPTNO",10);          //대문자인 이유, 토드에서는 대문자로 사용하고 있음. 맞춰서 보내줘야함.
+		map.put("DNAME", "영업부");
+		map.put("LOC", "부산");
+		deptList.add(map);
+		map = new HashMap<>();//복사본
+		map.put("DEPTNO", 20);
+		map.put("DNAME", "개발부");
+		map.put("LOC", "대구");
+		deptList.add(map);
+		map = new HashMap<>();//복사본
+		map.put("DEPTNO", 30);
+		map.put("DNAME", "인사부");
+		map.put("LOC", "서울");
+		deptList.add(map);
 		return deptList;
 	}
 	/*메인메소드*/
 	public static void main(String[] args) {
 		JFrame.setDefaultLookAndFeelDecorated(true); //첫 MVC패턴을 사용했던 swing에서 제공되는 창의 형태!
-		DeptManager dm = new DeptManager(); //상속된 JFrame도 호출이 됨.
+		DeptManager2 dm = new DeptManager2(); //상속된 JFrame도 호출이 됨.
 	}
 	@Override //추상메소드 구현체클래스
 	public void actionPerformed(ActionEvent e) {
@@ -93,11 +104,11 @@ public class DeptManager extends JFrame implements ActionListener {
 				dtm_dept.removeRow(0);                   //0번째 로우를 삭제함. 왜? 로우가 삭제될 때 마다 dtm의 로우수가 줄어든다. 
 			}
 			for(int i=0;i<deptList.size();i++) {   //vector 가 3번 생성됨 
-				DeptDTO rdept = deptList.get(i);   //벡터를 인스턴스화하면 벡터단위에 값을 넣을 수 있음.
+				Map<String, Object> map = deptList.get(i);   //벡터를 인스턴스화하면 벡터단위에 값을 넣을 수 있음.
 				Vector<Object> v = new Vector<>();        //제네릭은 int, String 섞여있으니 Object로 일단 기입    
-				v.add(0,rdept.getDeptno()); //벡터에 초기화
-				v.add(1,rdept.getDname()); //벡터에 초기화
-				v.add(2,rdept.getLoc()); //벡터에 초기화
+				v.add(0,map.get("DEPTNO")); //벡터에 초기화
+				v.add(1,map.get("DNAME")); //벡터에 초기화
+				v.add(2,map.get("LOC")); //벡터에 초기화
 				dtm_dept.addRow(v);
 			}
 		}
@@ -112,10 +123,10 @@ public class DeptManager extends JFrame implements ActionListener {
 			else {  //로우를 선택했을 때 데이터를 삭제하기
 				System.out.println(index);//선택하고 누른 데이터는 몇 번째 로우인가????
 				//insert here
-				DeptDTO rdept = deptList.remove(index);  //리스트에서 삭제해야 하니까 다트 앞에 deptList
-				System.out.println(rdept+", "+rdept.getDeptno()+", "+ rdept.getDname()+", "+rdept.getLoc());
+				Map<String, Object> map = deptList.remove(index);  //리스트에서 삭제해야 하니까 다트 앞에 deptList
+				System.out.println(map+", "+map.get("DEPTNO")+", "+ map.get("DNAME")+", "+map.get("LOC"));
 				//삭제성공하였나요?
-				if(rdept!=null) {
+				if(map!=null) {
 					JOptionPane.showMessageDialog(this, "삭제 성공 하셨습니다..","INFO",JOptionPane.INFORMATION_MESSAGE); //클래스, 메시지, 타이틀명, 아이콘
 					refreshData(); //새로고침 메소드 호출
 				}
