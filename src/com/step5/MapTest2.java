@@ -13,6 +13,7 @@ public class MapTest2 {
 		map.put("deptno","10");
 		map.put("dname","영업부");
 		map.put("loc","부산");
+		//set 써보기(수학적 집합 추상화를 모델링 가능)
 		Set<String> set = map.keySet();
 		Object keys[] = set.toArray();
 		System.out.println(keys[0]);
