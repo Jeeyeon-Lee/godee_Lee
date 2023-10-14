@@ -118,7 +118,8 @@ public class BaseballGame implements ActionListener{
 	
 	//나가기 버튼이나 나가기 메뉴 아이템을 선택(클릭)했을때 호출되는 메소드 구현
 	public void exit() {
-
+		//이벤트가 감지되었을 때 호출이 되는 메소드
+		System.exit(0);
 	}
 	//화면을 그려주는 메소드
 	public void initDisplay() {

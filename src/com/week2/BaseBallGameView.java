@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.util.Random;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -64,10 +65,12 @@ public class BaseBallGameView implements ActionListener{
 	JButton jbtn_exit 	= new JButton("나가기");
 	int my[]  = new int[3];
 	int com[] = new int[3];
-	int cnt = 0;//++cnt 힌트 문장에서 순번을 출력하는 변수
+	int cnt = 0;
+	//++cnt 힌트 문장에서 순번을 출력하는 변수
 	//세자리 임의의 숫자를 채번하는 메소드 구현하기
 	public void ranCom() {
-
+		Random r = new Random();
+		com[0] = r.nextInt(10);
 	}
 	//사용자가 입력한 값을 판정하는 메소드를 구현해 봅시다.
 	public String account(String user) {
@@ -85,6 +88,16 @@ public class BaseBallGameView implements ActionListener{
 			temp = Integer.parseInt(user);
 		} catch (NumberFormatException e) {
 			return "숫자만 입력하세요.";
+		}
+		for(int i=0;i<com.length;i++) {
+			for(int j=0;j<my.length;j++) {
+				if(com[i]==my[j] && i==j) {
+					strike ++;
+				}
+				if(com[i]==my[j]) {
+					ball ++;
+				}
+			}
 		}
 		return strike+"스  "+ball+"볼";
 	}

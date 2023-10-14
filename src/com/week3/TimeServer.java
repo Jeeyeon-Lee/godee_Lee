@@ -6,9 +6,11 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Calendar;
 
+//메인스레드와 통신객체 사이에 경합이 벌어질 수 있어서 굳이 Thread를 상속받음.
 public class TimeServer extends Thread {
 	//생성자
 	//아래 소켓은 서버소켓에 접속해온 클라이언트의 소켓정보를 쥐고 있다. 
+	//TimeClient에서 호출될 때 결정되므로 일단 null!! 
 	Socket client = null;
 	 /*이 부분이 학습 필요한 부분 */
 	public TimeServer(Socket client) { //getTime에서 나온 정보를 소켓을 통해 보냄. 
@@ -19,30 +21,33 @@ public class TimeServer extends Thread {
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		int min = cal.get(Calendar.MINUTE);
 		int sec = cal.get(Calendar.SECOND);
-		return hour +":"+min+":"+sec;
+		//10보다 작은 숫자는 앞에 0을 붙여서 표시 -> String으로 작업하기 위해서
+		return (hour < 10 ? "0" + hour : "" + hour) + ":" +
+		(min < 10 ? "0" + min : "" + min)  +	":" +
+		(sec < 10 ? "0" + sec : "" + sec) ;
 	}
-	//오버라이드 - 콜백메소드
+	//오버라이드 - 콜백메소드-run 함수의 오버라이드
 	@Override
-	public void run() {  //1초에 한번씩 보내야하는 스레드 필요!
+	public void run() {
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream()); //소켓을통해 객체를 받아야함. 마이크와 스피커
-			while(true) { //무한루프
-				//서버소켓에 접속한 클라이언트 소켓을 가지고 OutputStream을 생성하면 writeObject메소드를 통해 Object 단위로 메세지를 쓸 수 있다.
-				System.out.println("server run 호출");
-				oos.writeObject(getTime()); 
-				try {                          //인터셉트 일어날 수 있으니 예외처리 반드시 필요!!
-					sleep(1000);  //1초
-				} catch (Exception e) { //예외가 있으면 잡아줘
-					System.out.println(e.toString());
-				} finally {                  //무슨일이 있어도 이건 해줘
-					try {
-						client.close();
-					} catch (Exception e) {
-					}
-				}
-			}////////////////////////////////////while end//////////////////////////////////////////////
+			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+			while(true) {
+				//서버소켓에 접속한 클라이언트 소켓을 가지고 OutputStream을 생성하면 writeObject메소드를 통해서
+				//오브젝트단위로 메시지를 쓴다
+				System.out.println("server run호출");
+				oos.writeObject(getTime());
+				try {
+					sleep(1000); //1초
+				} catch (Exception e) {
+					// TODO: handle exception
+				} 
+			}
 		} catch (Exception e) {
-			// TODO: handle exception
+			try {
+				client.close();
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
 		}
 	}
 	/*
@@ -53,39 +58,50 @@ public class TimeServer extends Thread {
 	field - static int
 	*/ 
 	public static void main(String[] args) {
+		//선언과 생성 나누는 이유는 네트워크는 나눠서 처리해야함. 
 		int port = 5000;
-		ServerSocket server = null;  //존재만 함. 일x, ServerSocket은 예외처리를 반드시 하게 되어있는 클래스임. 
-		Socket client = null;           //일을 하는 소켓
-		try{
+		ServerSocket server = null;
+		Socket client = null;
+		try {
 			server = new ServerSocket(port);
-		} catch (IOException ie) {
-			System.out.println("해당 포트는 이미 사용중입니다.");
+		} catch (IOException e) {
+			System.out.println("해당포트는 이미 사용중입니다.");
 			try {
-				server.close();
-			} catch (IOException e) {
-				System.out.println(e.toString());
-			} 
-		}
-		System.out.println("TimeServer started successfully");
-		while(true) { //서버 24시간 작동 무한루프앞에선 예약만 받고, 서버가 자리로 안내하는...?!
+				server.close();				
+			} catch (Exception e2) {
+				// TODO: handle exception
+			}
+		}///////////////////// end of try
+		//여기 까지 진행되었다면 포트도 점유했고 서버소켓도 정상적으로 만들어짐
+		System.out.println("TimeServer started successfully...");
+		while(true) {
 			try {
+				//클라이언트 소켓이 접속해 올 때 까진 기다리고 있음-wating 상태, 다음코드 진행x
 				client = server.accept();
-				if(client != null) {
-					System.out.println(client);					
+				//클라이언트가 들어오면
+				if(client !=null) {
+					//System.out.println(client); 
 				}
-				System.out.println("New client connected..."+client.getInetAddress());
-				//메소드 안에서 선언된 클라이언트소켓을 런메소드에서 사용하고 싶어서 파라미터값에 넣어서 초기화시켜 사용
-				TimeServer ts = new TimeServer(client); 
+				System.out.println("New client connected...");
+				//생성자 호출, 전변으로 선언된 클라이언트가 76번에서 실체가 생김
+				//생성자 안에 inputStream, OutputStream 생성함
+				TimeServer ts = new TimeServer(client);
 				ts.start();
 				System.out.println("New TimeServer Thread started...");
 			} catch (Exception e) {
-				System.out.println("Can't start server thread!!");
-				e.printStackTrace(); //에러에 대한 정보를 확인할 수 있음. 디버깅할 때 많이 사용함.
+				System.out.println("Can't start server thread!!!");
+				e.printStackTrace();
 				try {
 					client.close();
 				} catch (Exception e2) {
+					// TODO: handle exception
 				}
 			}
-		}
-	}
-}
+		}////////////////////// end of main 
+	}//////////////////////// end of main //////////////////////
+
+
+}//end of TimeServer
+
+
+
