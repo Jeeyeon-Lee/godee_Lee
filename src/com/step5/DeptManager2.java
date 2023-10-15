@@ -176,6 +176,14 @@ public class DeptManager2 extends JFrame implements ActionListener {
 			List<Object> addRow = new Vector<>();
 			dtm_dept.addRow((Vector<?>) addRow);
 		}
+		//JButton jbtnExit        = new JButton("종료");
+		else if(obj == jbtnExit) {
+			System.out.println("종료 버튼 클릭");
+		    int option = JOptionPane.showConfirmDialog(null, "프로그램을 종료하시겠습니까?", "확인", JOptionPane.YES_NO_OPTION);
+		    if (option == JOptionPane.YES_OPTION) {
+		    	System.exit(0);
+		    }
+		}
 	}
 	//새로운 정보 저장하는 메소드 
 //	public void addData() {
