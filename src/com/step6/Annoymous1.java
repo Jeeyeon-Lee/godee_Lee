@@ -34,11 +34,9 @@ public class Annoymous1 extends JFrame {
 		this.setVisible(true);
 	}
 	/*정의메소드*/
-	
 	/*메인메소드*/
 	public static void main(String[] args) {
 		new Annoymous1();
-
 	}
 
 }

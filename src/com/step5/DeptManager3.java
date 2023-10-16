@@ -1,14 +1,22 @@
 package com.step5;
-
+/*인스턴스화 
+ * A a = new A();             -> 기초
+ * A a = A.getInstance();    ->복제본을 허락하지 않고 원본 하나만 관리 - > 싱글톤 패턴
+ * B b = new A();             ->추상클래스 상속관계
+ * C c = new A();             ->인터페이스 구현체 클래스
+ * */
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -16,7 +24,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
-
+import com.google.gson.Gson;
 import com.util.DBConnectionMgr;
 
 //액션리스너를 인터페이스로 하는 클래스명으로 출력 가능(선언부, 생성부 이름이 다름)
@@ -25,7 +33,14 @@ import com.util.DBConnectionMgr;
 //추상클래스와 인터페이스는 설계적 관점에서 중요 -> 2~3년차 작업
 public class DeptManager3 extends JFrame implements ActionListener {
 	/*선언부*/
-	DBConnectionMgr
+	/* ****************************************************************************************************************************************/
+	//JDBC API 활용하여 오라클 서버에서 부서목록 조회하기
+	Connection con                = null;   // java.sql.Connection           -> java.sql.Connection -> 특정 데이터베이스와의 연결(연결통로 확보)
+	PreparedStatement pstmt   = null;   // java.sql.PreparedStatement ->java.sql.PreparedStatement -> connection이 생성되어야 아래도 메모리 로딩됨  미리 컴파일된 SQL 문
+	ResultSet rs                      = null;   // java.sql.ResultSet               -> java.sql.ResultSet -> open, cursor, fecth, close 커서를 조작해서 반환받는 추상클래스
+	//공통코드에서 재사용가능한 메소드를 설계함 -> DBConnectionMGR
+	DBConnectionMgr dbMGR = null;  // com.util.DBConnectionMgr  ->서버연결
+	/* ****************************************************************************************************************************************/
 	List<Map<String, Object>> deptList = new ArrayList<>(); //왜 데이터를 전변으로 넣는가? 입력|수정|삭제|조회를 생각하면 유지되어야 하기에!
 	String header[] = {"부서번호","부서명","지역"};
 	String datas[][] = new String[3][3]; //데이터는 아직x, 후처리
@@ -44,7 +59,8 @@ public class DeptManager3 extends JFrame implements ActionListener {
 	/*생성자*/
 	public DeptManager3() { //디폴트 생성자
 		initDisplay();
-		getDeptList(); //메소드 호출!! -> 전변의 값으로 배열을 받고 있었으니 초기화되어 출력됨. 
+		//메소드를 통해 주입받는데 앞이 인스턴스 변수가 아닌 클래스 타입이 기입됨(static이기 때문에 class 급!)
+		dbMGR = DBConnectionMgr.getInstance(); //오라클 서버의 정보를 실시간으로 가져옴. 복제본을 허락하지 않고 원본 하나만 관리
 	}
 	/*화면처리부*/
 	public void initDisplay() {
@@ -86,22 +102,47 @@ public class DeptManager3 extends JFrame implements ActionListener {
 		deptList.add(map);
 		return deptList;
 	}
-	/*데이터서버연동 메소드**************************************************/
+	/* ******데이터서버연동 메소드*********************************************************************************************************/
 	//select가 모든 업무 페이지의 시작 페이지, 맡은 업무의 첫 시작!
 	public List<DeptDTO> getDTOList() {                   //1번쨰로 연습!
 		System.out.println("제네릭타입을 getter/setter로 처리할 때");
 		List<DeptDTO> list = new ArrayList<>();
+		StringBuilder sql = new StringBuilder();    //java.lang.StringBuilder.StringBuilder() -> 문자열 작성기를 구성
+		sql.append("SELECT deptno,dname,loc FROM dept");
 		//DBConnectionMGR 연동필요 ->지변으로?전변으로?? -> 전변으로!! 
-		try {
-			
+		try { //아래 코드에서 null오류가 발생했다면 생성자에서 객체 주입이 안되었던 것(42번에서 생성)
+			  //생성되어야 getConnection() 메소드 호출 가능하고
+			  //호출되어야 리턴값으로 Connection 객체를 주입받음. 
+			con = dbMGR.getConnection();
+			pstmt = con.prepareStatement(sql.toString()); // preparedStatement java.sql.Connection.prepareStatement(String sql) throws SQLException
+			rs = pstmt.executeQuery(); // ResultSet java.sql.PreparedStatement.executeQuery() throws SQLException
+			DeptDTO dto =null; 
+			while (rs.next()) {
+				//생성자로 초기화 or DB의 값으로 초기화 필요  -> 생성자로 사용
+				dto = new DeptDTO(rs.getInt("deptno"), rs.getString("dname"), rs.getString("loc"));
+				//아래 코드를 통해 정보가 주소번지가 생기며 저장이 된다.
+				list.add(dto);
+			}
+			//list로 입력내용 확인
+			System.out.println(list);
+			/*
+			브라우저(html, js 등)를 통한 출력일 때 사용하면 됨. 
+			자바를 통해 DB연동한 후 후처리의 개념(자바컬렉션 프레임워크 -> JSON 포맷으로 변경함)
+			Gson g = new Gson();
+			String temp = g.toJson(list);
+			*/
+			//예외처리 추가
+		} catch (SQLException se) {
+			System.out.println(se.toString());// -> 부적합한 식별자  - 컬럼명이 존재하지 않을 때 - SQLException해당됨
 		} catch (Exception e) {
-			// TODO: handle exception
+			e.printStackTrace(); // void java.lang.Throwable.printStackTrace()  -> 이력을 라인번호와 함께 보여줌?
 		}
 		return list;
 	}
 	public List<Map<String, Object>> getMapList() {  //2번째로 연습! Map 두 개 이상 조인할 때 유용, 이것으로 많이 연습 필요!
 		System.out.println("제네릭 타입을 Map으로 처리할 때");
 		List<Map<String, Object>> list = new ArrayList<>();
+		Map<String, Object> map = new HashMap<>();
 		return list;
 	}
 	/*메인메소드*/
@@ -121,16 +162,21 @@ public class DeptManager3 extends JFrame implements ActionListener {
 			/*여기서 dtm은 데이터셋(자바측의)을 받는 클래스임. 데이터 값이 들어가는 것이었음. */
 			/*Jtable은 틀만 갖고 있어 클릭이벤트는 가능하고, 데이터를 쥐고 있지 못 함. */
 			/*getRowCount는 실제 데이터의 로우 수를 반환함.*/
+			//메소드를 경유하도록 생성함.(오라클 서버에서 조회한 결과를 쥐고 있음)
+			//리턴타입이 쥐고 있음. 
+//			List<DeptDTO> list = new ArrayList<>();  //이전에 사용했던 생성
+			List<DeptDTO> list = getDTOList();
 			while(dtm_dept.getRowCount()>0) {       //테이블의 줄이 0 이상이면(일단 출력이 된 화면이라면)
 				dtm_dept.removeRow(0);                   //0번째 로우를 삭제함. 왜? 로우가 삭제될 때 마다 dtm의 로우수가 줄어든다. 
 			}
-			for(int i=0;i<deptList.size();i++) {   //vector 가 3번 생성됨 
-				Map<String, Object> map = deptList.get(i);   //벡터를 인스턴스화하면 벡터단위에 값을 넣을 수 있음.
+			for(int i=0;i<list.size();i++) {   //list 사이즈는 4임? 
+				DeptDTO dept = list.get(i);
 				Vector<Object> v = new Vector<>();        //제네릭은 int, String 섞여있으니 Object로 일단 기입    
-				v.add(0,map.get("DEPTNO")); //벡터에 초기화
-				v.add(1,map.get("DNAME")); //벡터에 초기화
-				v.add(2,map.get("LOC")); //벡터에 초기화
-				dtm_dept.addRow(v);
+				v.add(0,dept.getDeptno()); //벡터에 초기화
+				v.add(1,dept.getDname()); //벡터에 초기화
+				v.add(2,dept.getLoc()); //벡터에 초기화
+				//addRow메소드 오버로딩은 Vector, Object[]-1차 배열임 -> Vector로 처리하기로 함.
+				dtm_dept.addRow(v);    //row에 추가하는 코드를 4번 실행 왜? list.size가 4임. 
 			}
 		}
 		/*삭제하기*/
