@@ -36,7 +36,9 @@ public class DBConnectionMgr {
 			//각 제조사의 드라이버 클래스를 로딩하기 = ojdbc6.jar 문자열로서 객체 주입 받아냄. - 둘을 연결하기 위해 인터페이스 필요
 			//인터페이스는 제조사가 제공해야 한다. 노출 시 핵심기술 유출됨. 
 			Class.forName("oracle.jdbc.driver.OracleDriver");  //java.lang.Class<T> -> java reflection API 공부, F/W만들 수 있음. (https://jeongkyun-it.tistory.com/225)
-			con = DriverManager.getConnection(_URL,_USER,_PW); //.getConnection(String url, String user, String password)
+			//getConnection throws SQLException(classnotFoundException 나올 경우, 빌드패스하지 않은 것(~jar파일)
+			//try catch를 통해 사이드 이펙트가 발생하지 않도록 예방하는 코드 신뢰도 ->지변, 람다식, 화살표함수 등 사용
+ 			con = DriverManager.getConnection(_URL,_USER,_PW); //파라미터값(String url, String user, String password)
 		}catch (ClassNotFoundException e) { //클래스 못 찾을 때 
 			System.out.println("ojdbc6.jar를 설정하지 않았다. 그래서 클래스를 못 찾는다.");
 		}catch (Exception e) {                     //비번이 맞지 않을 때 

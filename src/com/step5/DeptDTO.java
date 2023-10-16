@@ -38,7 +38,4 @@ public class DeptDTO {
 	public void setLoc(String loc) {
 		this.loc = loc;
 	}
-	/*메인메소드*/
-	public static void main(String[] args) {
-	}
 }
