@@ -10,10 +10,10 @@ public class DBConnectionMgr2 {
 	Connection con = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
-	public static final String _DRIVER = "com.mysql.cj.jdbc.Driver";
-	public static final String url = "jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul";
-	public static final String user = "myblog";
-	public static final String pw = "abcd1234";
+	public static final String2 _DRIVER = "com.mysql.cj.jdbc.Driver";
+	public static final String2 url = "jdbc:mysql://localhost:3306/blog?serverTimezone=Asia/Seoul";
+	public static final String2 user = "myblog";
+	public static final String2 pw = "abcd1234";
 	public Connection getConnection()
 	{
 		try {

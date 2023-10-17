@@ -17,8 +17,8 @@ public class OracleTest {
 	public OracleTest() {
 	
 	}
-	public List<Map<String,Object>> getDeptList(){
-		List<Map<String,Object>> dList = null;
+	public List<Map<String2,Object>> getDeptList(){
+		List<Map<String2,Object>> dList = null;
 		StringBuilder sql = new StringBuilder();
 		try {
 			sql.append("SELECT deptno, dname, loc FROM dept");
@@ -26,7 +26,7 @@ public class OracleTest {
 			pstmt = con.prepareStatement(sql.toString());
 			rs = pstmt.executeQuery();
 			dList = new ArrayList<>();
-			Map<String,Object> rmap =  null;
+			Map<String2,Object> rmap =  null;
 			while(rs.next()) {
 				rmap = new HashMap<>();
 				rmap.put("deptno", rs.getInt("deptno"));
@@ -41,11 +41,11 @@ public class OracleTest {
 		}
 		return dList;
 	}
-	public static void main(String[] args) {
+	public static void main(String2[] args) {
 		OracleTest ot = new OracleTest();
-		List<Map<String,Object>> dList = ot.getDeptList();
+		List<Map<String2,Object>> dList = ot.getDeptList();
 		for(int i=0;i<dList.size();i++) {
-			Map<String,Object> map = dList.get(i);
+			Map<String2,Object> map = dList.get(i);
 			System.out.println(map);
 		}
 	}

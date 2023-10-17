@@ -108,7 +108,9 @@ public class DeptManager3 extends JFrame implements ActionListener {
 		System.out.println("제네릭타입을 getter/setter로 처리할 때");
 		List<DeptDTO> list = new ArrayList<>();
 		StringBuilder sql = new StringBuilder();    //java.lang.StringBuilder.StringBuilder() -> 문자열 작성기를 구성
-		sql.append("SELECT deptno,dname,loc FROM dept");
+		sql.append("SELECT empno, ename, sal, ename");
+		sql.append("FROM   emp, dept");
+		sql.append("WHERE emp.deptno = dept.deptno");
 		//DBConnectionMGR 연동필요 ->지변으로?전변으로?? -> 전변으로!! 
 		try { //아래 코드에서 null오류가 발생했다면 생성자에서 객체 주입이 안되었던 것(42번에서 생성)
 			  //생성되어야 getConnection() 메소드 호출 가능하고
@@ -142,7 +144,44 @@ public class DeptManager3 extends JFrame implements ActionListener {
 	public List<Map<String, Object>> getMapList() {  //2번째로 연습! Map 두 개 이상 조인할 때 유용, 이것으로 많이 연습 필요!
 		System.out.println("제네릭 타입을 Map으로 처리할 때");
 		List<Map<String, Object>> list = new ArrayList<>();
-		Map<String, Object> map = new HashMap<>();
+		//StringBuffer는 스레드 안전, StringBuilder 불안전, 인터셉트가능 but, 지금은 로컬이니까 괜찮음. 
+		//String과 비교할 때 하나로 관리 가능-메모리에 대한 이익 있음.
+		StringBuilder sql = new StringBuilder();    //java.lang.StringBuilder.StringBuilder() -> 문자열 작성기를 구성,  
+		
+		sql.append("SELECT empno, ename, sal, ename");
+		sql.append("FROM   emp, dept");
+		sql.append("WHERE emp.deptno = dept.deptno");
+		//DBConnectionMGR 연동필요 ->지변으로?전변으로?? -> 전변으로!! 
+		try { //아래 코드에서 null오류가 발생했다면 생성자에서 객체 주입이 안되었던 것(42번에서 생성)
+			  //생성되어야 getConnection() 메소드 호출 가능하고
+			  //호출되어야 리턴값으로 Connection 객체를 주입받음. 
+			con = dbMGR.getConnection();
+			pstmt = con.prepareStatement(sql.toString());
+			rs = pstmt.executeQuery();
+			Map<String, Object> map = null;
+			while (rs.next()) {
+				map = new HashMap<>();
+				map.put("empno",rs.getInt("empno"));
+				map.put("ename",rs.getInt("ename"));
+				map.put("sal",rs.getInt("sal"));
+				map.put("dname",rs.getInt("dname"));
+				list.add(map); //emp 집합의 사원은 14명임 -> oracle로 확인 가능! select count() from;
+			}
+			//list로 입력내용 확인
+			System.out.println(map);
+			/*
+			브라우저(html, js 등)를 통한 출력일 때 사용하면 됨. 
+			자바를 통해 DB연동한 후 후처리의 개념(자바컬렉션 프레임워크 -> JSON 포맷으로 변경함)
+			Gson g = new Gson();
+			String temp = g.toJson(list);
+			*/
+			//예외처리 추가
+		} catch (SQLException se) {
+			System.out.println(se.toString());// -> 부적합한 식별자  - 컬럼명이 존재하지 않을 때 - SQLException해당됨
+		} catch (Exception e) {
+			e.printStackTrace(); // void java.lang.Throwable.printStackTrace()  -> 이력을 라인번호와 함께 보여줌?
+		}		
+		
 		return list;
 	}
 	/*메인메소드*/
