@@ -31,7 +31,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import com.util.DBConnectionMgr;
 //인터페이스는 여러개 사용가능!
-public class ZipCodeView extends JFrame implements ActionListener, FocusListener {
+public class ZipCodeView extends JFrame implements ActionListener, FocusListener,MouseListener {
 	//선언부
 	String zdo = null;
 	//물리적으로 떨어져 있는 db서버와 연결통로 만들기
@@ -62,13 +62,17 @@ public class ZipCodeView extends JFrame implements ActionListener, FocusListener
 			,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
 			,JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	String zdos3[] = null;
-	 DBConnectionMgr dbMgr = null;//싱글톤 패턴으로 관리한다. 복제본을 만들지 않는다. 절대로....
-	//MemberShip memberShip = null;
+	DBConnectionMgr dbMgr = null;//싱글톤 패턴으로 관리한다. 복제본을 만들지 않는다. 절대로....
+	MemberShipView memberShipView = null;
 	/*생성자*/
 	public ZipCodeView() {}
+	public ZipCodeView(MemberShipView memberShipView) {
+		this.memberShipView = memberShipView;
+	}
 	//화면처리부
 	public void initDisplay() {
 		jtb_zipcode.requestFocus();
+		jtb_zipcode.addMouseListener(this);
 		jtf_search.addFocusListener(this);
 		jbtn_search.addActionListener(this);
 		jtf_search.addActionListener(this);
@@ -147,7 +151,7 @@ public class ZipCodeView extends JFrame implements ActionListener, FocusListener
 				Map<String, Object> map = list.get(i);
 				Vector<Object> v = new Vector<>();
 				v.add(0, map.get("zipcode"));
-				v.add(1, map.get("adress"));
+				v.add(1, map.get("address"));
 				dtm_zipcode.addRow(v);
 			}
 			
@@ -180,6 +184,45 @@ public class ZipCodeView extends JFrame implements ActionListener, FocusListener
 
 	@Override
 	public void focusLost(FocusEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	/*마우스 이벤트*/
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mousePressed(MouseEvent e) {
+		if(e.getClickCount()==2) { //더블클릭했니?
+			//화면에서 더블클릭한 행의 인덱스값 반환
+			int index = jtb_zipcode.getSelectedRow();
+			int zipcode = (int) dtm_zipcode.getValueAt(index, 0);
+			String address = (String)dtm_zipcode.getValueAt(index, 1);
+			System.out.println(zipcode + ", " + address);
+			//부모의 주소번지가 필요함. 
+			//insert here 회원가입창에서 우편번호와 주소자리 조회된 결과를 자동으로 출력해줌
+			//MembershipView인스턴스화하면 그 때 즉시 ZipCodeView 객체가 생성되고 이 때 파라미터 자리에
+			//this는 앞에 인스턴스화를 통해 현재 로딩 중인 그 원본이므로 복사본이 아니다...
+			memberShipView.jtf_zipcode.setText(String.valueOf(zipcode));
+			memberShipView.jtf_address.setText(String.valueOf(address));
+			
+		}
+	}
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void mouseExited(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
