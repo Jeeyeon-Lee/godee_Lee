@@ -19,16 +19,19 @@ public class DBConnectionMgr {
 	public static final String _USER = "scott";
 	public static final String _PW = "tiger";
 	/*정의메소드*/
-	//Calendar 클래스 처럼 메소드를 통해 객체 주입 받기
+	//Calendar 클래스 처럼 메소드를 통해 객체 주입 받기(세련된 표현) -> 객체에 대한라이프 사이클 관리 ->스프링에 넘김(제어역전)
 	//메소드를 통해 객체생성을 하므로 if문 사용해서 조건별 객체 생성이 가능해짐. 
 	public static DBConnectionMgr getInstance() {
-		if(dbMGR ==null) dbMGR = new DBConnectionMgr();
+		if(dbMGR ==null) dbMGR = new DBConnectionMgr();//전변에 대한 null 체크 후 객체를 생성함
+		//메소드 앞에 static을 붙여서 추가인스턴스화 없이 직접 메소드 호출이 가능하도록 설계 - 싱글톤 패턴과 관계 있음. 
 		return dbMGR;
 	}
-	//리턴타입으로 연결통로를 확보한 con을 얻는다
+	//리턴타입이 Object인 경우로 연결통로를 확보한 con을 얻는다
 	//Connection(물리적으로 떨어져있는 것 사이 연결통로 확보, url 계정 정보 일치) 객체로 
 	//앞에 객체가 주입되지 않으면 나머지 뒤에는 모두 null인 상태에 놓인다. 
-	public Connection getConnection()
+	//메소드의 리턴타입으로 참조형(객체)로 구현할 수 있음. 
+	public Connection getConnection()//리턴타입이 인터페이스 -> 확장성 좋음, 결합도 낮춰짐
+	                                          //단위, 통합테스트 가능(깃 사용시 각 브랜치를 머지하는 것 필요)
 	{
 		/*예외처리 시 사용되는 try catch
 		 *멀티블록이 가능함. 단, 하위에서 상위클래스로 처리함 */
