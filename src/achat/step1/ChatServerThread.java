@@ -83,8 +83,8 @@ public class ChatServerThread extends Thread {
 						case 200:{
 							cs.jta_log.append("ChatServerThread : 200번 청취완료");
 							String nickName = st.nextToken();//kiwi
-							String message = st.nextToken();//오늘 스터디할까?
-							broadCasting(200+"|"+nickName+"|"+message);//oos.writeObject
+							String messege = st.nextToken();//오늘 스터디할까?
+							broadCasting(200+"|"+nickName+"|"+messege);//oos.writeObject
 						}break;
 						case 500:{
 							
