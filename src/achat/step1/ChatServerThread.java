@@ -27,8 +27,7 @@ public class ChatServerThread extends Thread {
 			//100|kiwi -입장하기 처리를 생성자에서 벌써 하였다.
 			//생성자안이면 입장했다는걸 어떻게 증명한다는 건가요?
 			String msg = (String)ois.readObject();//누가 보낸걸 듣나요? ChatClient
-			cs.jta_log.append(msg+"\n");//로그를 남긴다(출력) - 추적하다
-			StringTokenizer  st = new StringTokenizer(msg,"|");
+ 			StringTokenizer  st = new StringTokenizer(msg,"|");
 			st.nextToken();//100
 			chatName = st.nextToken();//kiwi
 			cs.jta_log.append(chatName+"님이 입장하였습니다.\n");
@@ -53,8 +52,6 @@ public class ChatServerThread extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
-
 	}	
 	
 	//run메소드도 콜백메소드 입니다. - 개발자가 직접 호출하지 않아요

@@ -13,6 +13,7 @@ import javax.swing.JTextArea;
 //왜 스레드를 굳이 상속받는 건가요? - 화면처리하는 메인메소드와 통신채널 설정하는 코드 분리
 //혜택 - 화면처리와 네트워크 처리 분리한다 - 안전한 서비스 제공하기 위해서
 public class ChatServer extends Thread {
+	/*선언부*/
 	//List의 구현체 클래스는 ArrayList(스레드불안전-조치가 없다, 배려가 없다.추가로직이 포함안됨), Vector(동시접속자를 배려하여 0.1초라도 먼저 들어오면 관리를 해준다.읽기 쓰기 속도가 느리다.)
 	//챗서버에 접속해온 사용자에 대한 정보를 담는 벡터 선언임
 	//다수의 클라이언트 요청을 처리하는 서버를 개발할때 사용함
@@ -27,9 +28,9 @@ public class ChatServer extends Thread {
 	JScrollPane jsp_log = new JScrollPane(jta_log
 			 , JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
 			 , JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+	/*생성자*/
 	public ChatServer() {}
-
-	
+	/*정의메소드*/
 	@Override
 	public void run() {//통신에 대한 처리 -  지연, 끊김, 노이즈, 대기
 		//서버에 접속해온 클라이언트 스레드 정보를 관리할 벡터 생성하기 
