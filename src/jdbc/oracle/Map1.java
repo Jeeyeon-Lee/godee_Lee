@@ -37,6 +37,7 @@ public class Map1 {
 	//리턴타입이 Map(인터페이스)인 경우, 
 	Map<String, Object> methodC(Map<String, Object> pmap){
 		Map<String, Object> rmap = null;
+		rmap = map;
 		return rmap;
 	}
 	/*메인메소드*/
@@ -45,7 +46,10 @@ public class Map1 {
 		m.methodAPrint();
 		m.methodA();
 		m.methodAPrint();
-		m.methodC(Map<String, Object> map);
+	    Map<String, Object> pmap = new HashMap<>();
+	    Map<String, Object> resultMap = m.methodC(pmap);
+	    System.out.println(resultMap);
+		
 	}
 
 }
