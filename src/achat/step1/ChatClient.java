@@ -101,11 +101,15 @@ public class ChatClient extends JFrame implements ActionListener{ //UI 버튼에
 		} catch (Exception e) {
 			//예외가 발생했을 때 직접적인 원인되는 클래스명 출력하기
 			System.out.println(e.toString());
+			e.getStackTrace();
 		}
 	}	
 	/*메인메소드*/
 	public static void main(String[] args) {
-		
+		JFrame.setDefaultLookAndFeelDecorated(true);
+		ChatClient cc = new ChatClient();
+		cc.initDisplay();
+		cc.init();
 	}
 	
 	@Override

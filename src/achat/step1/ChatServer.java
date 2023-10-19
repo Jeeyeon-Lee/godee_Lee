@@ -36,7 +36,9 @@ public class ChatServer extends Thread {
 	JScrollPane jsp_log = new JScrollPane(jta_log
 			,JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
 			,JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-
+	/*생성자*/
+	ChatServer(){}
+	
 	@Override
 	public void run() {
 		//서버에 접속해온 클라이언트 스레드 정보를 관리할 공정한 벡터 생성하기 
@@ -53,10 +55,10 @@ public class ChatServer extends Thread {
 				socket = server.accept(); //ct 맞이
 				jta_log.append("client info:"+socket+"\n"); 	//여기 소켓은 ct 소켓 쥐고 있음. 
 				//아래에서 this는 ChatServer를 나타냄. 
+				System.out.println(this);
 				ChatServerThread tst = new ChatServerThread(this); //원본넘김, 협업
 				//아래 start에서 ChatServer의 run이 호출됨. 
 				tst.start();
-				break; //반복문 탈출 
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -65,7 +67,6 @@ public class ChatServer extends Thread {
 		
 	//말하기 처리는 메소드로 분리, 왜? 서버에 접속한 사람들에게(for문) 동일하게 메시지를 전달해야하기 때문 
 
-	/*생성자*/
 	/*정의메소드*/
 	public void initDisplay() {
 		jta_log.setLineWrap(true);//자동 줄바꿈
@@ -80,7 +81,7 @@ public class ChatServer extends Thread {
 		ChatServer cs = new ChatServer();
 		//start와 run의 start의 위치 선정 중요 -> run-start는 지연이 발생할 수 있어서 후순위로 넣어야 함.
 		//메소드들의 처리되는 시간(time-line) 다르다. 이 때문에 각자의 코드흐름을 생성하는 스레드가 필요하다. 
-		cs.initDisplay();
 		cs.start();  //Thread 상속받았기에 바로 start메소드 사용 가능 
+		cs.initDisplay();
 	}
 }
