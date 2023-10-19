@@ -39,19 +39,21 @@ public class ChatServer extends Thread {
 
 	@Override
 	public void run() {
-		//서버에 접속해온 클라이언트 스레드 정보를 관리할 벡터 생성하기 
+		//서버에 접속해온 클라이언트 스레드 정보를 관리할 공정한 벡터 생성하기 
 //		System.out.println("ChatServer의 run 호출");
 		globalList = new Vector<>();
 		boolean isStop = false;
+		//예외처리 : 만약 3002 포트를 오라클서버에서 점유하고 있다면!
 		try {
-			server = new ServerSocket(3002);
-			jta_log.append("Server Ready.........\n");
+			server = new ServerSocket(3002); //서버가 열림 
+			jta_log.append("Server Ready.........\n"); //대기 중 -> 손님오길 기다림 -> 다음코드 실행기회x(흐름방해) ->장애처리
 			while(!isStop) {
-				//서버소켓에 접속해온 사용자의 소켓 정보를 담음 
-//				socket = server.accept();
-				jta_log.append("client info:"+socket+"\n");	
+				//서버소켓에 접속해온 사용자의 소켓 정보를 담음
+//				Socket s= new Socket("172.16.2.11",3002); //ct 입장
+				socket = server.accept(); //ct 맞이
+				jta_log.append("client info:"+socket+"\n"); 	//여기 소켓은 ct 소켓 쥐고 있음. 
 				//아래에서 this는 ChatServer를 나타냄. 
-				ChatServerThread tst = new ChatServerThread(this);
+				ChatServerThread tst = new ChatServerThread(this); //원본넘김, 협업
 				//아래 start에서 ChatServer의 run이 호출됨. 
 				tst.start();
 				break; //반복문 탈출 
