@@ -7,23 +7,25 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 public class ChatServerThread extends Thread {
-	/*선언부*/
-	ChatServer cs =null;
-	Socket client  = null;
-	ObjectOutputStream oos = null;
-	ObjectInputStream ois     = null;
-	String chatName = null;//현재 서버에 입장한 클라이언트 스레드 닉네임 저장
-	/*생성자*/
-//	public ChatServerThread(List<ChatServer> globalList())) {	}
+	ChatServer cs = null;
+	Socket client = null;
+	ObjectOutputStream oos = null;//말할때 사용
+	ObjectInputStream ois = null;//들을 때 사용
+	//
+	String chatName = null;//현재 서버에 입장한 클라이언트 스레드의 닉네임 저장
+	//생성자의 파라미터
+	//public ChatServerThread(List<ChatServerThread> globalList, JTextArea jta_log) {
 	public ChatServerThread(ChatServer cs) {
-		cs.jta_log.append("ChatServerThread 호출"+"\n"); //챗서버스레드
-		this.cs = cs;  //초기화 -> 부모의 List를 사용할 수 있는가?
+		cs.jta_log.append("ChatServerThread호출 "+"\n");
+		//생성자 안에서 globalList에 현재 입장한 키위를 추가한다.
+		this.cs = cs;
 		this.client = cs.socket;
 		cs.jta_log.append("client "+client+"\n");		
 		try {
 			oos = new ObjectOutputStream(client.getOutputStream());
 			ois = new ObjectInputStream(client.getInputStream());
-			//100|kiwi
+			//100|kiwi -입장하기 처리를 생성자에서 벌써 하였다.
+			//생성자안이면 입장했다는걸 어떻게 증명한다는 건가요?
 			String msg = (String)ois.readObject();//누가 보낸걸 듣나요? ChatClient
 			cs.jta_log.append(msg+"\n");//로그를 남긴다(출력) - 추적하다
 			StringTokenizer  st = new StringTokenizer(msg,"|");
@@ -51,17 +53,57 @@ public class ChatServerThread extends Thread {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 
 	}	
-	/*정의메소드*/
-	//run 메소드는 콜백메소드, 개발자가 직접 호출x, 시스템에서 대신 호출
-	@Override //어노테이션
+	
+	//run메소드도 콜백메소드 입니다. - 개발자가 직접 호출하지 않아요
+	//시스템에서 대신 호출해 줌
+	@Override //annotation
 	public void run() {
-		System.out.println("ChatServerThread의 run 호출");
+		//System.out.println("ChatServerThread 의 run호출");
+		cs.jta_log.append("ChatServerThread 의 run호출"+"\n");
+		//insert here - 듣고 말하기(방송)
+		//말하기 처리는 메소드로 분리(for문-3사람)시킨다.
+		boolean isStop = false;
+		String msg = null;
+		try {
+			start:
+				while(!isStop) {
+					msg = (String)ois.readObject();
+					cs.jta_log.append(msg+"\n");
+					//로그가 append될때마다 스크롤바가 현재 문자열의 위치를 자동으로 인식해서 이동처리
+					cs.jta_log.setCaretPosition(cs.jta_log.getDocument().getLength());
+					//언제 선언부와 생성부를 나누어서 작성하나요?
+					//msg가 null일 수도 있다.- 의심
+					StringTokenizer st = null;
+					int protocol = 0;
+					if(msg !=null) {
+						st = new StringTokenizer(msg, "|");
+						protocol = Integer.parseInt(st.nextToken());
+					}
+					switch(protocol) {
+						case 200:{
+							cs.jta_log.append("ChatServerThread : 200번 청취완료");
+							String nickName = st.nextToken();//kiwi
+							String message = st.nextToken();//오늘 스터디할까?
+							broadCasting(200+"|"+nickName+"|"+message);//oos.writeObject
+						}break;
+						case 500:{
+							
+						}break start;
+					}
+				}
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
 	}
-	//서버가 ct에게 들은 것을 방송(여러사람, for문-Thread)하는 메소드 -> ChatServer에 스레드 붙인 이유임.
-	//왜 파라미터 자리인가? 매번 입력되는 메시지가 달라지기 떄문(지변으로 설정) 
-	public void broadCasting(String message) { 
+	//서버가 클라이언트에게 들은 것을 방송(여러사람-스레드를 붙임)하는 것이다.
+	//왜 파라미터 자리인가? - 매번 입력되는 메세지가 달라진다. - 지역변수
+	//oos.writeObject(message==>"200|kiwi|apple|오늘 스터디할까?");
+	public void broadCasting(String message) {
+		//for(int i = 0;i<cs.globalList.size();i++) {//cs.globalList.size()=3
 		for(ChatServerThread cst:cs.globalList) {	
 			cst.send(message);
 			//클라이언트 들에게 서버가 들은 메시지를 보낸다.- OutputStream
@@ -69,6 +111,7 @@ public class ChatServerThread extends Thread {
 			//oos.writeObject(message);
 		}
 	}
+	//DM을 처리하는데 필요한 메소드를 고려하여 메소드를 하나 더 추가해 본다.
 	public void send(String message) {
 		try {
 			oos.writeObject(message);
