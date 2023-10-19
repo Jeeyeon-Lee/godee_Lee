@@ -21,7 +21,7 @@ import javax.swing.table.DefaultTableModel;
 
 //사용자가 하고싶은 말을 전달하는 클래스 설계이다.
 public class ChatClient extends JFrame implements ActionListener{
-	
+	/*선언부*/
 	////////////////통신과 관련한 전역변수 추가 시작//////////////
 	Socket 				socket 	= null;
 	ObjectOutputStream 	oos 	= null;//말 하고 싶을 때
@@ -45,7 +45,7 @@ public class ChatClient extends JFrame implements ActionListener{
 	JButton jbtn_send  = new JButton("전송");//south속지 east
 	JTextArea jta_display = null;
 	JScrollPane jsp_display = null;	
-
+	/*정의메소드*/
 	//소켓 관련 초기화
 		public void init() {
 			try {
