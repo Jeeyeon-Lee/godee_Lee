@@ -1,5 +1,6 @@
 package jdbc.oracle;
 import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -10,6 +11,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 //데이터 셋 담당 디폴트 테이블 모델 API 활용하기 
+//ActionListener al = new EmpManager();
+//ActionPerformed 구현체 클래스 
 public class EmpManager extends JFrame implements ActionListener {
 	/*선언부*/
 	JPanel jp_north = new JPanel();
@@ -22,7 +25,6 @@ public class EmpManager extends JFrame implements ActionListener {
 	DefaultTableModel dtm = new DefaultTableModel(data,header);       //데이터 값(web에서 JSON의 역할이 됨)
 	JTable jt = new JTable(dtm);                                                         //틀, 양식, 표
 	JScrollPane jsp = new JScrollPane(jt);                                             //속지의 일부
-	Container con = new Container();
 	/*생성자*/
 	public EmpManager() {
 		init();
@@ -47,14 +49,27 @@ public class EmpManager extends JFrame implements ActionListener {
 	//화면구현
 	public void initDisplay() {
 		System.out.println("initDisplay 호출");
-		this.add(con);
+		jbtn_select.addActionListener(this); //this는 나 자신 EmpManager 
+		jbtn_insert.addActionListener(this); //this는 나 자신 EmpManager 
+		jbtn_update.addActionListener(this); //this는 나 자신 EmpManager 
+		jbtn_delete.addActionListener(this); //this는 나 자신 EmpManager 
+		jp_north.setLayout(new GridLayout(1,4)); //GridLayout은 창을 n으로 나누어서 가득 사용-1*4 레이아웃을 새로 구성(default는 왼쪽에서부터 오른쪽으로 생성되며 공간이 남음)
+		jp_north.add(jbtn_select);
+		jp_north.add(jbtn_insert);
+		jp_north.add(jbtn_update);
+		jp_north.add(jbtn_delete);
+		Container con = this.getContentPane();
+		dtm = null;
+		dtm = new DefaultTableModel(data, header);
+		jt = null;
+		jt = new JTable(dtm);
+		jsp = null;
+		jsp = new JScrollPane(jt);
 		this.add("Center",jsp);  //(위치, 컴포넌트)
 		this.setSize(500,300);
 		this.setVisible(true);
+		this.add("North",jp_north);
 	}
-	public void test() {
-	}
-	
 	/*메인메소드*/
 	public static void main(String[] args) {
 //		//선언부가 없으면 재사용 x,딱 한번만 사용할 때 (창만 띄울 거)
@@ -66,8 +81,31 @@ public class EmpManager extends JFrame implements ActionListener {
 		EmpManager em = new EmpManager();
 		em.initDisplay();
 	}
-	@Override //액션리스너 al = new empmanager();
-	public void actionPerformed(ActionEvent e) {
-		
+	@Override 
+	public void actionPerformed(ActionEvent e) { //여기 파라미터값은 JVM이 넣어줌 
+		Object obj = e.getSource();
+		//수정버튼 눌렀을 때
+		if(obj==jbtn_update) {//저장된 배열위치 확인 필요->초기화 진행		
+			System.out.println("수정 버튼 클릭");
+			System.out.println(dtm.getRowCount());
+			for(int i=0;i<dtm.getRowCount();i++) {   //테이블은 로우와 컬럼으로 구성되어 테이블 구조 
+				//is가 붙는 메소드는 boolean을 리턴타입으로 가져서 if문, while문에서 사용한다 . 
+				if(jt.isRowSelected(i)) { //너가 선택한 로우값은? 
+				//나초보랑 같은 row값이라면? String name = dtm.getValueAt("나초보",1,1)
+				//나초보에 해당하는 row값이면 ? setValueAt
+					String cname = (String)dtm.getValueAt(i, 1);
+					System.out.println(cname);
+					if("나초보".equals(cname)) { 
+						dtm.setValueAt(5000, i, 2);  
+					}
+					else if("나신입".equals(cname)) { 
+						dtm.setValueAt(3500, i, 2);  
+					}
+					else if("나일등".equals(cname)) { 
+						dtm.setValueAt(5500, i, 2);  
+					}
+				}
+			}
+		}
 	}
 }
