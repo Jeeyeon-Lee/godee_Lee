@@ -37,18 +37,17 @@ public class Map1 {
 	//리턴타입이 Map(인터페이스)인 경우, 
 	Map<String, Object> methodC(Map<String, Object> pmap){
 		Map<String, Object> rmap = null;
-		rmap = map;
+		this.map = rmap;
+		System.out.println(map);
 		return rmap;
 	}
 	/*메인메소드*/
 	public static void main(String[] args) {
 		Map1 m = new Map1();
-		m.methodAPrint();
+//		m.methodAPrint();
 		m.methodA();
 		m.methodAPrint();
-	    Map<String, Object> pmap = new HashMap<>();
-	    Map<String, Object> resultMap = m.methodC(pmap);
-	    System.out.println(resultMap);
+		m.methodC(null);
 		
 	}
 
