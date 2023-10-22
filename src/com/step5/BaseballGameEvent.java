@@ -19,18 +19,7 @@ public class BaseballGameEvent implements ActionListener{
 	public void exit() {
 		System.exit(0);
 		}
-	public void ranCom() {
-		Random r = new Random();
-		//첫번째 자리는 중복검사가 필요없다
-		bbgUI.bbgLogic.com[0] = r.nextInt(10);
-		//while문과는 다르게 무조건 한번은 실행됨
-		do {
-			bbgUI.bbgLogic.com[1] = r.nextInt(10);			
-		}while(bbgUI.bbgLogic.com[0]==bbgUI.bbgLogic.com[1]);//중복된 숫자이면 계속 돌아라
-		do {
-			bbgUI.bbgLogic.com[2] = r.nextInt(10);			
-		}while((bbgUI.bbgLogic.com[0]==bbgUI.bbgLogic.com[2]) || (bbgUI.bbgLogic.com[2]==bbgUI.bbgLogic.com[1]));//중복된 숫자이면 계속 돌아라
-	}
+
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("actionPerformed 호출 성공");
 		String label = e.getActionCommand();//감지된 클래스의 라벨담기
