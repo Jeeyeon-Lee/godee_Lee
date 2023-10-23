@@ -38,7 +38,7 @@ class List4{
 		System.out.println(x+", " +value);
 		//"1".equals("1")
 		System.out.println(it == value);
-		if(it !=null) {
+		if(it != null) {
 		//if(it == value) {//사용자로 부터 받아온 값과 set메소드의 리턴값으로 받아온 값을 비교하기
 			System.out.println("받아온 값과 수정된 값이 같니?");
 			isOk = true;			
@@ -59,7 +59,7 @@ public class ListMain4 {
 		String value = st.nextToken();
 		int ivalue = Integer.parseInt(value);//String -> int 바꿔줘(기능:처리:메소드 힘)
 		List4 l4 = new List4();
-		l4.init();
+		l4.init(); 
 		boolean isOk = l4.rankUpdate(index, ivalue);
 		if(isOk) {
 			System.out.println("수정 처리되었습니다.");
