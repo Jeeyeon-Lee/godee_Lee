@@ -33,5 +33,4 @@ public class BMain {
 		b = new B(1);
 		System.out.println(b.s.length()); //3
 	}
-
 }
