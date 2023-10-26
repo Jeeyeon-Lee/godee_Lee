@@ -11,18 +11,15 @@ class Super {
 		i = 1;
 	}
 }
-
 public class Sub extends Super {
 	public Sub(String text) {
 		System.out.println("sub");
 		i = 2;
 	}
-
-
 	public static void main(String args[]) {
 		Sub sub = new Sub("Hello");
 		System.out.println(sub.i);
 		Super sub2 = new Sub("Hi");
-		System.out.println(sub2.i);
+		System.out.println(sub.i);
 	}
 }
