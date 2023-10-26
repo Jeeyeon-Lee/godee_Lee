@@ -12,5 +12,4 @@ public class Car {
 	public void setCarNum(int carNum) {
 		this.carNum = carNum;
 	}
-
 }
