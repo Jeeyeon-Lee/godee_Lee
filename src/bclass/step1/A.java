@@ -9,6 +9,9 @@ public class A {
 	public A(int i) {
 		this(); // 디폴트 생성자 호출 가능!
 	}
+	public A(int i, int j) {
+		this.i = 50;
+	}
 	public void methodA() {
 		
 	}
@@ -24,11 +27,13 @@ public class A {
 		System.out.println(a.i);
 	}
 	public static void main(String[] args) {
-		A a = new A();
-		System.out.println(a);
-		a= new A(1);
-		System.out.println(a);
-		a.methodA(1);           //20 methodA(int i)를 거쳐서 그 메소드 안의 지변인 i 재정의값 출력 -> 원본에 영향x
-		System.out.println(a.i); //10 생성자 재정의값 출력
-	}
+//		A a = new A();
+//		System.out.println(a);
+		A a= new A(1);
+		System.out.println(a.i);
+//		a.methodA(1);           //20 methodA(int i)를 거쳐서 그 메소드 안의 지변인 i 재정의값 출력 -> 원본에 영향x
+//		System.out.println(a.i); //10 생성자 재정의값 출력
+		a = new A(1,1);
+		System.out.println(a.i);
+				}
 }
