@@ -11,6 +11,7 @@ class Super {
 		i = 1;
 	}
 }
+
 public class Sub extends Super {
 	public Sub(String text) {
 		System.out.println("sub");
