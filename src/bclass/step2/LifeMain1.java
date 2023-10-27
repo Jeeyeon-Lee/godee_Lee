@@ -18,9 +18,14 @@ class Life1{
 		System.out.println(who);      //kiwi 
 	}
 	/*메소드-자원반납(소멸)*/
+	
+	//사용자원 반납하지 않으면 gc가 스레드 스케쥴에 따라 수거한다.(묵시적으로 우선순위에 따라 처리)
 	public void destroy() {
 		if(s != null) {
 			s = null;
+			//gc도 명시적으로 호출할 수 있음 메모리 점유와 관련 있음. 따라서 static의 남용은 안된다. 
+			//2년차 미만 static 제약
+			System.gc();
 		}
 	}
 }
