@@ -1,11 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
+<<<<<<< HEAD
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-17">
+=======
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+>>>>>>> 6ec132f9f7689838e2aa775db0b54c0c76ac9233
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+<<<<<<< HEAD
 	<classpathentry kind="lib" path="src/extlib/ojdbc6.jar"/>
 	<classpathentry kind="lib" path="gson-2.8.9.jar"/>
+=======
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="src/exlib/gson-2.8.9.jar"/>
+	<classpathentry kind="lib" path="src/exlib/ojdbc6.jar"/>
+>>>>>>> 6ec132f9f7689838e2aa775db0b54c0c76ac9233
 	<classpathentry kind="output" path="bin"/>
 </classpath>

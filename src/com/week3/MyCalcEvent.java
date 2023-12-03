@@ -12,10 +12,10 @@ public class MyCalcEvent implements ActionListener {
 	//연산자 담기(+,-,*,/)-전변
 	String op = "";
 	MyCalcView myCalcView = null; //초기화
+	//생성자
 	public MyCalcEvent(MyCalcView myCalcView) {
 		this.myCalcView = myCalcView;
 	}
-	//생성자
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
